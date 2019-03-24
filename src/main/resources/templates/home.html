@@ -1,18 +1,275 @@
 <html>
 <head>
+<title>CloudCalc by Edwin Cruz</title>
+<!-- Search Engine Meta Tags -->
+<meta itemprop="name" content="Cloud Calc" />
+<meta itemprop="image" content="https://s.gravatar.com/avatar/2634080fc3ae93414e8f89f50cf9f460?s=80" />
+<meta name="description" content="Cloud Calc Sample Application" />
+<!-- Authoring Tags -->
+<meta name="author" content="Edwin M. Cruz" />
+<meta name="contact" content="ecruz165@yahoo.com" />
 
+<!-- Favicon Meta Tags -->
+<link rel="icon" sizes="192x192" href="https://s.gravatar.com/avatar/2634080fc3ae93414e8f89f50cf9f460?s=80" />
+<link rel="shortcut icon" href="https://s.gravatar.com/avatar/2634080fc3ae93414e8f89f50cf9f460?s=80" />
+<!--  Fonts -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+<!--  Style Sheets -->
+<link rel="stylesheet" href="/3rdparty/mcw-0.44.1/material-components-web.min.css" />
+
+<style>
+
+.panels {
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: block;
+}
+.mdc-button {
+width:100%;
+}
+</style>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 </head>
-<body>
+<body  class="mdc-typography" style="background-color:rgb(153,153,153); background-image: linear-gradient(135deg, rgb(127,127,127), rgb(153,153,153),rgb(153,153,153),rgb(127,127,127));" >
+
+   				<img src="/images/logo.png"/>
+
+<div class="mdc-layout-grid">
+	<div class="mdc-layout-grid__inner">
+		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-4-phone
+   					mdc-layout-grid__cell--span-4-tablet
+   					mdc-layout-grid__cell--span-6-desktop" >
+   		
+   		
+<div class="mdc-layout-grid__inner" >
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-4-phone
+   					mdc-layout-grid__cell--span-8-tablet
+   					mdc-layout-grid__cell--span-12-desktop" style="background-color: white;">
+   					
+   	<p>
+  $$ 4+5$$
+</p>
+   	
+   	</div>
+
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				 
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='C')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-2-phone
+   					mdc-layout-grid__cell--span-4-tablet
+   					mdc-layout-grid__cell--span-6-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='{}')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='/')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='7')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='8')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='9')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='X')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='4')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='5')"></th:block></div> 
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='6')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='-')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='1')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='2')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='3')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='+')"></th:block></div>
+	<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-2-phone
+   					mdc-layout-grid__cell--span-4-tablet
+   					mdc-layout-grid__cell--span-6-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='0')"></th:block></div>
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='.')"></th:block></div>
+   	   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-1-phone
+   					mdc-layout-grid__cell--span-2-tablet
+   					mdc-layout-grid__cell--span-3-desktop" >				
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='=')"></th:block></div>
+    	  	
+</div>
+   		
+   		
+   		
+   		
+   		
+   		
+   		</div>
+   		
+   		
+   		
+   		
+   		<div class="mdc-layout-grid__cell 
+   					mdc-layout-grid__cell--span-4-phone
+   					mdc-layout-grid__cell--span-4-tablet
+   					mdc-layout-grid__cell--span-6-desktop" >
 
 
-<form action="">
+<div id="dynamic-tab-bar" class="mdc-tab-bar" role="tablist" style="width:100%;">
+  <div class="mdc-tab-scroller">
+    <div class="mdc-tab-scroller__scroll-area">
+      <div class="mdc-tab-scroller__scroll-content">
+        
+        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+          <span class="mdc-tab__content">
+            <span class="material-icons">label</span>
+          </span>
+          <span class="mdc-tab-indicator mdc-tab-indicator--active">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
+        
+        <button class="mdc-tab " role="tab" tabindex="1">
+          <span class="mdc-tab__content">
+          <span class="material-icons">history</span>
+          </span>
+          <span class="mdc-tab-indicator">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
+        
+        <button class="mdc-tab " role="tab" tabindex="1">
+          <span class="mdc-tab__content">
+            <span class="material-icons">comment</span>
+          </span>
+          <span class="mdc-tab-indicator">
+            <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+          </span>
+          <span class="mdc-tab__ripple"></span>
+        </button>
 
-<input/>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-</form>
+<section>
+  <div class="panels">
+
+    <div id="panel-1" role="tabpanel" aria-hidden="false" class="panel active up-cell" >
+		<h1 class="mdc-typography--headline5">Saved Expressions</h1>
+   </div>
+
+   <div id="panel-2" role="tabpanel" aria-hidden="true" class="panel up-cell" >
+		<h1 class="mdc-typography--headline5">History</h1>
+	</div>
+
+   	<div id="panel-3" role="tabpanel" aria-hidden="true" class="panel up-cell" >
+		<h1 class="mdc-typography--headline5">Notes</h1>
+	</div>
+
+  </div>
+</section>
+    		
+   		</div>
+   	</div>
+  
+</div>
+
+
+<script src="/3rdparty/mcw-0.44.1/material-components-web.min.js"></script>
+<script type="text/javascript">mdc.autoInit();</script>
+<script type="text/javascript">
+      (function() {
+        setTimeout(function () {
+        	const dynamicTabBar = new mdc.tabBar.MDCTabBar(document.querySelector('#dynamic-tab-bar'));
+           var panels = document.querySelector('.panels');
+          dynamicTabBar.preventDefaultOnClick = true;
+
+          function updatePanel(index) {
+        	  var activePanel = panels.querySelector('.panel.active');
+        	  if (activePanel) {
+        	    activePanel.classList.remove('active');
+        	  }
+        	  var newActivePanel = panels.querySelector('.panel:nth-child(' + (index ) + ')');
+        	  if (newActivePanel) {
+        	    newActivePanel.classList.add('active');
+        	  }
+        	}
+
+          dynamicTabBar.listen('MDCTabBar:activated', function (t) {
+    
+        		var dynamicTabBar = t.detail;
+        		var nthChildIndex = dynamicTabBar.index+1;
+        		updatePanel(nthChildIndex);
+        	});
+          
+     
+        },200)
+      })();
+</script>
 
 </body>
-
-
 </html>

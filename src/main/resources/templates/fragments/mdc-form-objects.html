@@ -1,0 +1,56 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+
+<body>
+
+
+<th:block th:fragment="input(fieldName,fieldValue,displayValue,required)">
+<div class="mdc-form-field" style="width:100%">
+	<div class="mdc-text-field"  style="width:100%" data-mdc-auto-init="MDCTextField" th:classappend="${#fields.hasErrors(fieldName)} ? 'mdc-text-field--upgraded mdc-text-field--invalid'">
+		<label th:for="${fieldName}" class="mdc-floating-label" th:text="${required ? displayValue+'*' : displayValue}"> Field Name</label> 
+		<input th:id="${fieldName}" type="text" class="mdc-text-field__input" th:name="${fieldName}" th:value="${fieldValue}" th:required="${required}"  />
+	</div>
+	<p class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" th:id="${fieldName +'-validation-msg'}">
+		<th:block th:if="${ #fields.hasErrors(fieldName) }">Invalid Entry</th:block><th:block th:if=" ${ not #fields.hasErrors(fieldName) }">&nbsp;</th:block>
+	</p>
+</div>
+</th:block>
+
+
+<th:block th:fragment="select(fieldName,fieldValue,displayValue,optionList,required)">
+<div class="mdc-form-field " style="width:100%">
+	<div class="mdc-select mdc-ripple-upgraded" data-mdc-auto-init="MDCSelect" 
+		style="width:95%; --mdc-ripple-fg-size: 73px; --mdc-ripple-fg-scale: 1.98833; --mdc-ripple-fg-translate-start: 29.3047px, -17.4414px; --mdc-ripple-fg-translate-end: 25px, -8.5px;"
+		th:classappend="${#fields.hasErrors(fieldName)} ? 'mdc-text-field--upgraded mdc-text-field--invalid'">
+		<i class="mdc-select__dropdown-icon"></i>
+		<select th:name="${fieldName}" class="mdc-select__native-control"  th:required="${required}" >
+		<option value="" ></option>
+		<option th:each="option : ${optionList}" th:selected="${option.getValue()==fieldValue.getValue()}"
+					th:value="${option.value}"
+					th:text="${option.display}">New York</option>
+		</select> 
+		<label for="select-hero" class="mdc-floating-label mdc-floating-label--float-above" th:text="${displayValue}">Select State</label>
+		<div class="mdc-line-ripple" style="transform-origin: 65px center 0px;"></div>
+	</div>
+	<p class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" th:id="${fieldName+'-validation-msg'}">
+			<th:block th:if="${ #fields.hasErrors(fieldName) }">Invalid Choice</th:block>
+			<th:block th:if=" ${ not #fields.hasErrors(fieldName) }">&nbsp;</th:block>
+	</p>
+</div>
+</th:block>
+
+<th:block th:fragment="button(displayValue)">
+<button class="mdc-button mdc-button--raised mdc-ripple-upgraded" th:text="${displayValue}" ></button>
+</th:block>
+
+<th:block th:fragment="buttonCancelLink(displayValue, url)">
+<a th:href="${url}" class="mdc-button mdc-button--outline mdc-ripple-upgraded" th:text="${displayValue}"></a>
+</th:block>
+
+
+
+
+
+</body>
+</html>
