@@ -48,11 +48,14 @@
 width:100%;
 }
 </style>
+
+
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
+<script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
 </head>
 <body  class="mdc-typography" style="background-color:rgb(153,153,153); background-image: linear-gradient(135deg, rgb(127,127,127), rgb(153,153,153),rgb(153,153,153),rgb(127,127,127));" >
 
-   				<img src="/images/logo.png"/>
+<img src="/images/logo.png"/>
 
 <div class="mdc-layout-grid">
 	<div class="mdc-layout-grid__inner">
@@ -68,102 +71,98 @@ width:100%;
    					mdc-layout-grid__cell--span-8-tablet
    					mdc-layout-grid__cell--span-12-desktop" style="background-color: white;">
    					
-   	<p>
-  $$ 4+5$$
-</p>
-   	
-   	</div>
-
+   	<p id="expressionDisplay" style="min-height: 19px;">$$ $$</p>
+	</div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				 
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='C')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='C', id='clear')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-2-phone
    					mdc-layout-grid__cell--span-4-tablet
    					mdc-layout-grid__cell--span-6-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='{}')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='{}', id='group')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='/')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='/', id='divide')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='7')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='7', id='seven')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='8')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='8', id='eight')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='9')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='9', id='nine')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='X')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='X', id='multiply')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='4')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='4', id='four')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='5')"></th:block></div> 
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='5', id='five')"></th:block></div> 
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='6')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='6', id='six')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='-')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='-', id='subtract')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='1')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='1', id='one')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='2')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='2', id='two')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='3')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='3', id='three')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='+')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='+', id='add')"></th:block></div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-2-phone
    					mdc-layout-grid__cell--span-4-tablet
    					mdc-layout-grid__cell--span-6-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='0')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='0', id='zero')"></th:block></div>
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='.')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='.', id='decimal')"></th:block></div>
    	   		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
    					mdc-layout-grid__cell--span-2-tablet
    					mdc-layout-grid__cell--span-3-desktop" >				
-   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='=')"></th:block></div>
+   	<th:block	th:replace="/fragments/mdc-form-objects.html :: button(displayValue='=', id='solve')"></th:block></div>
     	  	
 </div>
    		
@@ -279,6 +278,82 @@ width:100%;
         },200)
       })();
 </script>
+<script type="text/javascript">
 
+const expressionDisplayEl = document.getElementById('expressionDisplay');
+
+function calculator(state='',action) {
+    switch (action.type) {
+      case 'ZERO':
+        return state+'0';
+      case 'ONE':
+        return state+'1';
+      case 'TWO':
+          return state+'2';
+      case 'THREE':
+          return state+'3';
+      case 'FOUR':
+          return state+'4';
+      case 'FIVE':
+          return state+'5';
+      case 'SIX':
+          return state+'6';
+      case 'SEVEN':
+          return state+'7';
+      case 'EIGHT':
+          return state+'8';
+      case 'NINE':
+          return state+'9';
+      case 'DECIMAL':
+          return state+'.';          
+      case 'CLEAR':
+    	  return " ";
+      case 'GROUP':
+    	  return '('+state+')';  
+      case 'SOLVE':
+    	  return state;  
+      case 'MULTIPLY':
+    	  return state+'*';  
+      case 'ADD':
+    	  return state+'+';  
+      case 'SUBTRACT':
+    	  return state+'-';  
+      case 'DIVIDE':
+    	  return state+'/';  
+      default:
+    	  return state;
+    }
+}
+
+const store = Redux.createStore(calculator);
+
+function render() {
+	expressionDisplayEl.innerHTML = store.getState();
+}
+
+render();
+store.subscribe(render);
+
+document.getElementById('zero'	).addEventListener('click', function () { store.dispatch({ type: 'ZERO' 	}) });
+document.getElementById('one'	).addEventListener('click', function () { store.dispatch({ type: 'ONE' 	}) });
+document.getElementById('two'	).addEventListener('click', function () { store.dispatch({ type: 'TWO' 	}) });
+document.getElementById('three'	).addEventListener('click', function () { store.dispatch({ type: 'THREE'}) });
+document.getElementById('four'	).addEventListener('click', function () { store.dispatch({ type: 'FOUR' }) });
+document.getElementById('five'	).addEventListener('click', function () { store.dispatch({ type: 'FIVE' }) });
+document.getElementById('six'	).addEventListener('click', function () { store.dispatch({ type: 'SIX' 	}) });
+document.getElementById('seven'	).addEventListener('click', function () { store.dispatch({ type: 'SEVEN'}) });
+document.getElementById('eight'	).addEventListener('click', function () { store.dispatch({ type: 'EIGHT'}) });
+document.getElementById('nine'	).addEventListener('click', function () { store.dispatch({ type: 'NINE'	}) });
+document.getElementById('decimal'	).addEventListener('click', function () { store.dispatch({ type: 'DECIMAL'	}) });
+document.getElementById('clear'	).addEventListener('click', function () { store.dispatch({ type: 'CLEAR' 	}) });
+document.getElementById('group'	).addEventListener('click', function () { store.dispatch({ type: 'GROUP' 	}) });
+document.getElementById('add'	).addEventListener('click', function () { store.dispatch({ type: 'ADD'}) });
+document.getElementById('subtract').addEventListener('click', function () { store.dispatch({ type: 'SUBTRACT'}) });
+document.getElementById('multiply'	).addEventListener('click', function () { store.dispatch({ type: 'MULTIPLY'	}) });
+document.getElementById('divide'	).addEventListener('click', function () { store.dispatch({ type: 'DIVIDE'	}) });
+document.getElementById('solve'	).addEventListener('click', function () { store.dispatch({ type: 'SOLVE'	}) });
+
+
+</script>
 </body>
 </html>

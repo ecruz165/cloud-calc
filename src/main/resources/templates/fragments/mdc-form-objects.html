@@ -40,8 +40,8 @@
 </div>
 </th:block>
 
-<th:block th:fragment="button(displayValue)">
-<button class="mdc-button mdc-button--raised mdc-ripple-upgraded" th:text="${displayValue}" ></button>
+<th:block th:fragment="button(displayValue, id)">
+<button th:id="${id}" class="mdc-button mdc-button--raised mdc-ripple-upgraded" th:text="${displayValue}" ></button>
 </th:block>
 
 <th:block th:fragment="buttonCancelLink(displayValue, url)">
