@@ -30,8 +30,6 @@ public class WebConfig implements  WebMvcConfigurer, ApplicationContextAware {
 	private final String[] cssResolvablePatterns = {"/**/*.css","/**/*.css.map"};
 	private final String[] icoResolvablePatterns = {"/**/*.ico"};
 	private final String[] imgResolvablePatterns = {"/**/*.png","/**/*.jpg","/**/*.svg"};
-	private final String[] webjarsPatterns = {"/webjars/**"};
-	
 	private final Set<String> htmlResolvablePatterns = Stream.of("*.html").collect(Collectors.toSet());
 	private final String resourcePath = "classpath:/META-INF/resources/";
 	private final String[] staticResourcePaths = {
@@ -85,7 +83,6 @@ public class WebConfig implements  WebMvcConfigurer, ApplicationContextAware {
 		.addResourceHandler(icoResolvablePatterns).addResourceLocations(resourcePath).setCachePeriod(5).resourceChain(true).addResolver(new PathResourceResolver());	
 		registry
 		.addResourceHandler(imgResolvablePatterns).addResourceLocations(staticResourcePaths).setCachePeriod(5).resourceChain(true).addResolver(new PathResourceResolver());	
-
 	}
 
 }

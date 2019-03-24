@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.sample.application.cloudcalc.domain.Equation;
+import com.sample.application.cloudcalc.domain.Expression;
 
-public interface CalculatorRepository extends JpaRepository<Equation, Long>{
+public interface CalculatorRepository extends JpaRepository<Expression, Long>{
 
 	@Override
-	List<Equation> findAll();
+	List<Expression> findAll();
 }

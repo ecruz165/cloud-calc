@@ -2,20 +2,14 @@ package com.sample.application.cloudcalc.service;
 
 import java.util.List;
 
-import com.sample.application.cloudcalc.domain.Equation;
+import com.sample.application.cloudcalc.domain.Expression;
 
 public interface CalculatorService {
 	
-	Equation add(String label, double a, double b);
-	
-	Equation subtract(String label, double a, double b);
-	
-	Equation multiply(String label, double a, double b);
-	
-	Equation divide(String label, double a, double b);
-	
-	List<Equation> findAll();
+	List<Expression> findAll();
 
-	void removeEquation(Equation eq);
+	void removeExpression(Expression eq);
+
+	Expression evaluate(Expression eq) throws Exception;
 
 }
