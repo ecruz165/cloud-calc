@@ -201,7 +201,7 @@ color: white;
     <div class="mdc-tab-scroller__scroll-area">
       <div class="mdc-tab-scroller__scroll-content">
         
-        <button class="mdc-tab mdc-tab--active mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0" >
+        <button id="history" class="mdc-tab mdc-tab--active mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0" >
           <span class="mdc-tab__content" style="color:white;">
             <span class="mdc-tab__icon material-icons">history</span>
             <span class="mdc-tab__text-label">History</span>
@@ -212,7 +212,7 @@ color: white;
           <span class="mdc-tab__ripple"></span>
         </button>
         
-        <button class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
+        <button id="labels" class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
           <span class="mdc-tab__content">        
             <span class="mdc-tab__icon material-icons">label</span>
             <span class="mdc-tab__text-label">Labels</span>
@@ -223,7 +223,7 @@ color: white;
           <span class="mdc-tab__ripple"></span>
         </button>
         
-        <button class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
+        <button id="comments" class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
           <span class="mdc-tab__content">
             <span class="mdc-tab__icon material-icons">comment</span>
             <span class="mdc-tab__text-label">Notes</span>
@@ -306,10 +306,27 @@ const expressionDisplayEl = document.getElementById('expressionDisplay');
 function calculator( state='' ,action) {
 	console.log('Calculator action: '+ action.type +' expression: '+ state +' result: '+ action.result);
     switch (action.type) {
-      case 'SHOWRESULTS':
+    case 'ADD_LABLED_ITEM': 
+		state = state+action.label;		
+		 return state;
+    case 'START_EXPRESSION_USING_HISTORY_ITEM':
+		state = action.expression;
+	    return state;
+    case 'SHOWRESULTS':
 		state = action.result;
-		renderHistory();
+		renderHistory();		
     	 return state;
+      case 'VIEW_HISTORY':
+  		renderHistory();
+    	renderLabels();    		
+      	return state;
+      case 'VIEW_LABELS':
+    	renderHistory();
+    	renderLabels();    	
+      	return state;     
+      case 'VIEW_COMMENTSS':
+  		renderHistory();
+      	 return state;           	 
       case 'ZERO':
         return state+'0';
       case 'ONE':
@@ -396,17 +413,24 @@ document.getElementById('subtract'	).addEventListener('click', function () { sto
 document.getElementById('multiply'	).addEventListener('click', function () { store.dispatch({ type: 'MULTIPLY'	}) });
 document.getElementById('divide'	).addEventListener('click', function () { store.dispatch({ type: 'DIVIDE'	}) });
 document.getElementById('solve'		).addEventListener('click', function () { store.dispatch({ type: 'SOLVE'	}) });
+document.getElementById('history'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_HISTORY'	}) });
+document.getElementById('labels'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_LABELS'	}) });
+document.getElementById('comments'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_COMMENTS'}) });
+
+
+
 
 </script>
 
 <template id="history-list-template">
 <ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
-<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="b3494dda-d88a-46e2-8e8d-c846ec6ce93b" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
 	{{#if labeled}}	
+<li class="labled-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
 	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
 	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
 	{{else}}
+<li class="history-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.expression}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
 	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">save_alt</span>
 	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.expression}}={{this.result}}</span>
 	{{/if}}
@@ -419,7 +443,7 @@ document.getElementById('solve'		).addEventListener('click', function () { store
 <template id="labels-list-template">
 <ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
-<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="b3494dda-d88a-46e2-8e8d-c846ec6ce93b" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+<li class="labeled-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
 	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
 	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
 	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
@@ -464,6 +488,38 @@ function renderLabels() {
 		});
 	}
 renderLabels();
+
+(function() {
+    setTimeout(function () {
+var classname = document.getElementsByClassName("history-item");
+var myFunction = function() {
+    var idValue = this.getAttribute("id");
+    var expressionValue = this.getAttribute("title");
+    store.dispatch({ type: 'START_EXPRESSION_USING_HISTORY_ITEM', id: idValue, expression: expressionValue});
+};
+
+for (var i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', myFunction, false);
+    
+}
+    },500)
+})();
+
+(function() {
+    setTimeout(function () {
+var classname = document.getElementsByClassName("labled-item");
+var myFunction = function() {
+    var idValue = this.getAttribute("id");
+    var labelValue = this.getAttribute("title");
+    store.dispatch({ type: 'ADD_LABLED_ITEM', id: idValue, label: labelValue});
+};
+for (var i = 0; i < classname.length; i++) {
+    classname[i].addEventListener('click', myFunction, false);
+    
+}
+    },600)
+})();
+
 </script>
 </body>
 </html>

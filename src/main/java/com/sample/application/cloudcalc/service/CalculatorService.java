@@ -10,8 +10,8 @@ public interface CalculatorService {
 	
 	List<Expression> findAll();
 	
-	void removeExpression(Expression eq);
+	void removeExpression(Expression eq) throws Exception;
 
 	Expression evaluate(Expression eq) throws Exception;
-
+	
 }
