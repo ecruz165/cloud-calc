@@ -34,6 +34,12 @@ public class CalculatorServiceImpl implements CalculatorService {
 	}
 
 	@Override
+	public List<Expression> findAllLabels() {
+		return calculatorRepository.findByLabelOrderByCreatedDesc();
+	}
+
+	
+	@Override
 	public List<Expression> findAll() {
 		return calculatorRepository.findAllByOrderByCreatedDesc();
 	}
@@ -139,5 +145,6 @@ public class CalculatorServiceImpl implements CalculatorService {
 		} else 
 			throw new Exception("Invalid expression provided");
 	}
+
 
 }

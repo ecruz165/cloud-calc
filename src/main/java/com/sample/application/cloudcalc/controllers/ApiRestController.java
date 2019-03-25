@@ -27,6 +27,13 @@ public class ApiRestController {
 		this.calculatorService = calculatorService;
 	}
 	
+	@GetMapping("/api/expressions/labled")
+	List<ExpressionModel> getAllLabels() {
+		List<Expression> domainList = calculatorService.findAllLabels();
+		List<ExpressionModel> modelList = convertToModelList(domainList);
+		return modelList;
+	}
+	
 	@GetMapping("/api/expressions")
 	List<ExpressionModel> getAll() {
 		List<Expression> domainList = calculatorService.findAll();

@@ -250,7 +250,7 @@ color: white;
 
    <div id="panel-2" role="tabpanel" aria-hidden="true" class="panel" >
 
-		<div id="label-list"></div>
+		<div id="labels-list"></div>
 	</div>
 
    	<div id="panel-3" role="tabpanel" aria-hidden="true" class="panel" >
@@ -400,24 +400,33 @@ document.getElementById('solve'		).addEventListener('click', function () { store
 </script>
 
 <template id="history-list-template">
-<ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list">
+<ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
 <li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="b3494dda-d88a-46e2-8e8d-c846ec6ce93b" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
 	{{#if labeled}}	
 	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
-	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>	
+	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
 	{{else}}
 	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">save_alt</span>
 	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.expression}}={{this.result}}</span>
 	{{/if}}
-
 	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
 </li>
 {{/expresssions}}
 </ul>
-
 </template>
 
+<template id="labels-list-template">
+<ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
+{{#expresssions}}
+<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="b3494dda-d88a-46e2-8e8d-c846ec6ce93b" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
+	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
+	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
+</li>
+{{/expresssions}}
+</ul>
+</template>
 
 <script type="text/javascript">
 
@@ -437,6 +446,24 @@ fetch('/api/expressions', { method: 'get'})
 	});
 }
 renderHistory();
+
+
+function renderLabels() {
+	var labelsListTemplate     = document.getElementById('labels-list-template').innerHTML;
+	var labelsListCompiledTemplate       = Handlebars.compile(labelsListTemplate);
+	var labelsList     = document.getElementById('labels-list');
+	fetch('/api/expressions/labled', { method: 'get'})
+		.then(function(response) {	return response.json();})
+		.then(function(json) {
+			  var    data = {
+					  expresssions : json
+			        };
+			var html = labelsListCompiledTemplate(data);
+			labelsList.innerHTML = html;
+			return json;
+		});
+	}
+renderLabels();
 </script>
 </body>
 </html>
