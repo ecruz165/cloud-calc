@@ -2,10 +2,7 @@ package com.sample.application.cloudcalc.domain;
 
 import java.math.BigDecimal;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +15,15 @@ public class Expression extends AbstractDomainClass {
 	
 	String label;
 	
-	String expressionString; // number or arithmetic expression
-	
-	@ManyToOne(cascade={CascadeType.ALL})
-    @JoinColumn(name="next_operand_id")
-	Expression nextOperand; // 	
-	String nextOperation; // add, subtractBy, multiplyBy, divideBy; 
+	String expression; // number or arithmetic expression
 	
 	BigDecimal result; // only set result when label is defined
 	
 	public Expression(String expression) {
-		expressionString = expression;
+		this.expression = expression;
+	}
+	public Expression(String expression, BigDecimal result) {
+		this.expression = expression;
+		this.result = result;
 	}
 }

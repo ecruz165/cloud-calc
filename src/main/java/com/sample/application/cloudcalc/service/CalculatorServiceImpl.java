@@ -41,11 +41,12 @@ public class CalculatorServiceImpl implements CalculatorService {
 	@Override
 	public Expression evaluate(Expression eq) throws Exception {
 		// An expression can be a constant expression or arithmetic expression 
-		log.info("Expression: " +  eq.getExpressionString() + "******" );
-		String expression = eq.getExpressionString();
+		log.info("Expression: " +  eq.getExpression() + "******" );
+		String expression = eq.getExpression();
 		expression = expression.replaceAll(" ","");
-		String value = solve(eq.getExpressionString());
+		String value = solve(eq.getExpression());
 		eq.setResult(new BigDecimal(value));
+		calculatorRepository.save(eq);
 		return eq;
 	}
 	

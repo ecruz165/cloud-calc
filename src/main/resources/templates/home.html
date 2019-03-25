@@ -71,7 +71,7 @@ width:100%;
    					mdc-layout-grid__cell--span-8-tablet
    					mdc-layout-grid__cell--span-12-desktop" style="background-color: white;">
    					
-   	<p id="expressionDisplay" style="min-height: 19px;">$$ $$</p>
+   	<p id="expressionDisplay" style="min-height: 19px;padding-left: 12px;">$$ $$</p>
 	</div>
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-1-phone
@@ -246,7 +246,8 @@ width:100%;
   
 </div>
 
-
+<script type="module" src="/3rdparty/fetch-3.0.0/fetch.min.js"></script>
+<script src="/3rdparty/handlebars-4.1.1/handlebars.min.js"></script>
 <script src="/3rdparty/mcw-0.44.1/material-components-web.min.js"></script>
 <script type="text/javascript">mdc.autoInit();</script>
 <script type="text/javascript">
@@ -282,8 +283,12 @@ width:100%;
 
 const expressionDisplayEl = document.getElementById('expressionDisplay');
 
-function calculator(state='',action) {
+function calculator( state='' ,action) {
+
     switch (action.type) {
+      case 'SHOWRESULTS':
+		state = action.result;
+    	 return state;
       case 'ZERO':
         return state+'0';
       case 'ONE':
@@ -305,12 +310,13 @@ function calculator(state='',action) {
       case 'NINE':
           return state+'9';
       case 'DECIMAL':
-          return state+'.';          
+          return state+'.';
       case 'CLEAR':
     	  return " ";
       case 'GROUP':
     	  return '('+state+')';  
       case 'SOLVE':
+    	  state = solve(state);
     	  return state;  
       case 'MULTIPLY':
     	  return state+'*';  
@@ -325,6 +331,20 @@ function calculator(state='',action) {
     }
 }
 
+function solve(state){
+	fetch('/expressions/solve/', {
+		method: 'post',
+	    body: JSON.stringify({expression: state}),
+		headers:{'Content-Type': 'application/json'}}
+	).then(function(response) {
+		    return response.json();
+		  }).then(function(data) {
+			  store.dispatch({ type: 'SHOWRESULTS', result: data.result });
+			  console.log('Request success: ', data.result);
+		  });
+	return state;
+}
+
 const store = Redux.createStore(calculator);
 
 function render() {
@@ -334,25 +354,24 @@ function render() {
 render();
 store.subscribe(render);
 
-document.getElementById('zero'	).addEventListener('click', function () { store.dispatch({ type: 'ZERO' 	}) });
-document.getElementById('one'	).addEventListener('click', function () { store.dispatch({ type: 'ONE' 	}) });
-document.getElementById('two'	).addEventListener('click', function () { store.dispatch({ type: 'TWO' 	}) });
-document.getElementById('three'	).addEventListener('click', function () { store.dispatch({ type: 'THREE'}) });
-document.getElementById('four'	).addEventListener('click', function () { store.dispatch({ type: 'FOUR' }) });
-document.getElementById('five'	).addEventListener('click', function () { store.dispatch({ type: 'FIVE' }) });
-document.getElementById('six'	).addEventListener('click', function () { store.dispatch({ type: 'SIX' 	}) });
-document.getElementById('seven'	).addEventListener('click', function () { store.dispatch({ type: 'SEVEN'}) });
-document.getElementById('eight'	).addEventListener('click', function () { store.dispatch({ type: 'EIGHT'}) });
-document.getElementById('nine'	).addEventListener('click', function () { store.dispatch({ type: 'NINE'	}) });
+document.getElementById('zero'		).addEventListener('click', function () { store.dispatch({ type: 'ZERO' 	}) });
+document.getElementById('one'		).addEventListener('click', function () { store.dispatch({ type: 'ONE' 		}) });
+document.getElementById('two'		).addEventListener('click', function () { store.dispatch({ type: 'TWO' 		}) });
+document.getElementById('three'		).addEventListener('click', function () { store.dispatch({ type: 'THREE'	}) });
+document.getElementById('four'		).addEventListener('click', function () { store.dispatch({ type: 'FOUR' 	}) });
+document.getElementById('five'		).addEventListener('click', function () { store.dispatch({ type: 'FIVE' 	}) });
+document.getElementById('six'		).addEventListener('click', function () { store.dispatch({ type: 'SIX' 		}) });
+document.getElementById('seven'		).addEventListener('click', function () { store.dispatch({ type: 'SEVEN'	}) });
+document.getElementById('eight'		).addEventListener('click', function () { store.dispatch({ type: 'EIGHT'	}) });
+document.getElementById('nine'		).addEventListener('click', function () { store.dispatch({ type: 'NINE'		}) });
 document.getElementById('decimal'	).addEventListener('click', function () { store.dispatch({ type: 'DECIMAL'	}) });
-document.getElementById('clear'	).addEventListener('click', function () { store.dispatch({ type: 'CLEAR' 	}) });
-document.getElementById('group'	).addEventListener('click', function () { store.dispatch({ type: 'GROUP' 	}) });
-document.getElementById('add'	).addEventListener('click', function () { store.dispatch({ type: 'ADD'}) });
-document.getElementById('subtract').addEventListener('click', function () { store.dispatch({ type: 'SUBTRACT'}) });
+document.getElementById('clear'		).addEventListener('click', function () { store.dispatch({ type: 'CLEAR' 	}) });
+document.getElementById('group'		).addEventListener('click', function () { store.dispatch({ type: 'GROUP' 	}) });
+document.getElementById('add'		).addEventListener('click', function () { store.dispatch({ type: 'ADD'		}) });
+document.getElementById('subtract'	).addEventListener('click', function () { store.dispatch({ type: 'SUBTRACT'	}) });
 document.getElementById('multiply'	).addEventListener('click', function () { store.dispatch({ type: 'MULTIPLY'	}) });
 document.getElementById('divide'	).addEventListener('click', function () { store.dispatch({ type: 'DIVIDE'	}) });
-document.getElementById('solve'	).addEventListener('click', function () { store.dispatch({ type: 'SOLVE'	}) });
-
+document.getElementById('solve'		).addEventListener('click', function () { store.dispatch({ type: 'SOLVE'	}) });
 
 </script>
 </body>
