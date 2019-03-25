@@ -10,4 +10,6 @@ public interface CalculatorRepository extends JpaRepository<Expression, Long>{
 
 	@Override
 	List<Expression> findAll();
+	
+	List<Expression> findAllByOrderByCreatedDesc();
 }

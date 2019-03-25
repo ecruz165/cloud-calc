@@ -35,7 +35,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 	@Override
 	public List<Expression> findAll() {
-		return calculatorRepository.findAll();
+		return calculatorRepository.findAllByOrderByCreatedDesc();
 	}
 
 	@Override

@@ -47,13 +47,17 @@
 .mdc-button {
 width:100%;
 }
+
+.mdc-tab-bar{
+  color: white !important;
+}
 </style>
 
 
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 <script src="https://unpkg.com/redux@latest/dist/redux.min.js"></script>
 </head>
-<body  class="mdc-typography" style="background-color:rgb(153,153,153); background-image: linear-gradient(135deg, rgb(127,127,127), rgb(153,153,153),rgb(153,153,153),rgb(127,127,127));" >
+<body  class="mdc-typography" style="background-color:rgb(153,153,153); background-image: linear-gradient(135deg, rgb(111, 9, 253), rgb(111, 9, 253),rgb(111, 9, 253),rgb(111, 9, 253));" >
 
 <img src="/images/logo.png"/>
 
@@ -166,11 +170,6 @@ width:100%;
     	  	
 </div>
    		
-   		
-   		
-   		
-   		
-   		
    		</div>
    		
    		
@@ -179,7 +178,7 @@ width:100%;
    		<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-4-phone
    					mdc-layout-grid__cell--span-4-tablet
-   					mdc-layout-grid__cell--span-6-desktop" >
+   					mdc-layout-grid__cell--span-6-desktop" style="background-color: var(--mdc-theme-primary);" >
 
 
 <div id="dynamic-tab-bar" class="mdc-tab-bar" role="tablist" style="width:100%;">
@@ -187,9 +186,10 @@ width:100%;
     <div class="mdc-tab-scroller__scroll-area">
       <div class="mdc-tab-scroller__scroll-content">
         
-        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
-          <span class="mdc-tab__content">
-            <span class="material-icons">label</span>
+        <button class="mdc-tab mdc-tab--active mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0" >
+          <span class="mdc-tab__content" style="color:white;">
+            <span class="mdc-tab__icon material-icons">history</span>
+            <span class="mdc-tab__text-label">History</span>
           </span>
           <span class="mdc-tab-indicator mdc-tab-indicator--active">
             <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -197,9 +197,10 @@ width:100%;
           <span class="mdc-tab__ripple"></span>
         </button>
         
-        <button class="mdc-tab " role="tab" tabindex="1">
-          <span class="mdc-tab__content">
-          <span class="material-icons">history</span>
+        <button class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
+          <span class="mdc-tab__content">        
+            <span class="mdc-tab__icon material-icons">label</span>
+            <span class="mdc-tab__text-label">Labels</span>
           </span>
           <span class="mdc-tab-indicator">
             <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -207,9 +208,10 @@ width:100%;
           <span class="mdc-tab__ripple"></span>
         </button>
         
-        <button class="mdc-tab " role="tab" tabindex="1">
+        <button class="mdc-tab mdc-tab--stacked" role="tab" tabindex="1">
           <span class="mdc-tab__content">
-            <span class="material-icons">comment</span>
+            <span class="mdc-tab__icon material-icons">comment</span>
+            <span class="mdc-tab__text-label">Notes</span>
           </span>
           <span class="mdc-tab-indicator">
             <span class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
@@ -226,16 +228,19 @@ width:100%;
 <section>
   <div class="panels">
 
-    <div id="panel-1" role="tabpanel" aria-hidden="false" class="panel active up-cell" >
-		<h1 class="mdc-typography--headline5">Saved Expressions</h1>
+    <div id="panel-1" role="tabpanel" aria-hidden="false" class="panel active" >
+		<h1 class="mdc-typography--headline6">History</h1>
+		<div id="history-list"></div>
    </div>
 
-   <div id="panel-2" role="tabpanel" aria-hidden="true" class="panel up-cell" >
-		<h1 class="mdc-typography--headline5">History</h1>
+   <div id="panel-2" role="tabpanel" aria-hidden="true" class="panel" >
+		<h1 class="mdc-typography--headline5">Saved Expressions</h1>
+		<div id="label-list"></div>
 	</div>
 
-   	<div id="panel-3" role="tabpanel" aria-hidden="true" class="panel up-cell" >
+   	<div id="panel-3" role="tabpanel" aria-hidden="true" class="panel" >
 		<h1 class="mdc-typography--headline5">Notes</h1>
+		<div id="notes-list"></div>		
 	</div>
 
   </div>
@@ -288,7 +293,7 @@ function calculator( state='' ,action) {
     switch (action.type) {
       case 'SHOWRESULTS':
 		state = action.result;
-		addEquationToHistory(state, action.result);
+		renderHistory();
     	 return state;
       case 'ZERO':
         return state+'0';
@@ -332,10 +337,6 @@ function calculator( state='' ,action) {
     }
 }
 
-function addEquationToHistory(state, action.result){
-	
-	
-}
 
 function solve(state){
 	fetch('/expressions/solve/', {
@@ -349,6 +350,9 @@ function solve(state){
 		  });
 	return state;
 }
+
+
+
 
 const store = Redux.createStore(calculator);
 
@@ -378,6 +382,36 @@ document.getElementById('multiply'	).addEventListener('click', function () { sto
 document.getElementById('divide'	).addEventListener('click', function () { store.dispatch({ type: 'DIVIDE'	}) });
 document.getElementById('solve'		).addEventListener('click', function () { store.dispatch({ type: 'SOLVE'	}) });
 
+</script>
+
+<template id="history-list-template">
+{{#expresssions}}
+<div>
+<h5>{{this.expression}}={{this.result}}</h5>
+<p>{{this.created}}</p>
+</div>
+{{/expresssions}}
+</template>
+
+
+<script type="text/javascript">
+
+function renderHistory() {
+var historyListTemplate     = document.getElementById('history-list-template').innerHTML;
+var historyListCompiledTemplate       = Handlebars.compile(historyListTemplate);
+var historyList     = document.getElementById('history-list');
+fetch('/api/expressions', { method: 'get'})
+	.then(function(response) {	return response.json();})
+	.then(function(json) {
+		  var    data = {
+				  expresssions : json
+		        };
+		var html = historyListCompiledTemplate(data);
+		historyList.innerHTML = html;
+		return json;
+	});
+}
+renderHistory();
 </script>
 </body>
 </html>
