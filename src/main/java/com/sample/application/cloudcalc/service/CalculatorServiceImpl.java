@@ -55,6 +55,8 @@ public class CalculatorServiceImpl implements CalculatorService {
 		expression = expression.replace("-+", MINUS);
 		expression = expression.replace("+-", MINUS);
 		expression = expression.replace("--", PLUS);
+		expression = expression.replace(" ", "");
+		
 		String[] operands = extractOperands(expression);
 		
 		if (operands.length==1) {
@@ -68,20 +70,20 @@ public class CalculatorServiceImpl implements CalculatorService {
 			String[] operand = findPartialExpression(DIVIDE, expression, operands);
 			String val = operand[0];
 			String newVal =  operand[1];
-			String reolution = expression.replace(val, newVal);	
-			return solve(reolution);		
+			String resolution = expression.replace(val, newVal);	
+			return solve(resolution);		
 		} else if (expression.contains(MULTIPLY)) {
 			String[] operand = findPartialExpression(MULTIPLY, expression, operands);
 			String val = operand[0];
 			String newVal =  operand[1];
-			String reolution = expression.replace(val, newVal);	
-			return solve(reolution);
+			String resolution = expression.replace(val, newVal);	
+			return solve(resolution);
 		} else {
 			String[] operand = findPartialExpression(null, expression, operands);
 			String val = operand[0];
 			String newVal =  operand[1];
-			String reolution = expression.replace(val, newVal);	
-			return solve(reolution);
+			String resolution = expression.replace(val, newVal);	
+			return solve(resolution);
 		} 
 	}
 
@@ -104,12 +106,14 @@ public class CalculatorServiceImpl implements CalculatorService {
 	}
 
 	private String[] findPartialExpression(String operator, String expression, String[] operands) throws Exception {
+		
 		int index=0;
 		for(int j=0; j< operands.length-1; j++) {
 			index= index + (operands[j].length());
 			String nextOperator = expression.substring(index,index+1);
 			operator= operator==null? nextOperator:operator;
-			if( operator.equals(expression.substring(index,index+1))) {
+			String operatorFoundInExpression = expression.substring(index,index+1);
+			if( operator.equals(operatorFoundInExpression)) {
 				String found = expression.substring(index,index+1);
 				String returnExpression = operands[j]+found+operands[j+1];
 				String returnResult = solve(operands[j],operator, operands[j+1]);

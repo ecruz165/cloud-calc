@@ -77,6 +77,13 @@ public class CalculatorServiceImplTest {
 	}
 
 	@Test
+	public void test_complex_scenario1()throws Exception {
+		Expression eq = new Expression("8*6");
+		eq = calculatorService.evaluate(eq);
+		assertEquals( new BigDecimal(48), eq.getResult() );	
+	}
+	
+	@Test
 	public void test_complex_scenario2()throws Exception {
 		Expression eq = new Expression("-8*-6");
 		eq = calculatorService.evaluate(eq);

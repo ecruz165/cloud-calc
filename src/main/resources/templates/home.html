@@ -284,10 +284,11 @@ width:100%;
 const expressionDisplayEl = document.getElementById('expressionDisplay');
 
 function calculator( state='' ,action) {
-
+	console.log('Calculator action: '+ action.type +' expression: '+ state +' result: '+ action.result);
     switch (action.type) {
       case 'SHOWRESULTS':
 		state = action.result;
+		addEquationToHistory(state, action.result);
     	 return state;
       case 'ZERO':
         return state+'0';
@@ -331,6 +332,11 @@ function calculator( state='' ,action) {
     }
 }
 
+function addEquationToHistory(state, action.result){
+	
+	
+}
+
 function solve(state){
 	fetch('/expressions/solve/', {
 		method: 'post',
@@ -340,7 +346,6 @@ function solve(state){
 		    return response.json();
 		  }).then(function(data) {
 			  store.dispatch({ type: 'SHOWRESULTS', result: data.result });
-			  console.log('Request success: ', data.result);
 		  });
 	return state;
 }
