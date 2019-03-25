@@ -20,6 +20,9 @@ public class LoadDatabase {
 			log.info("Preloading " + repository.save(new Expression("2+3", new BigDecimal("6"))));
 			log.info("Preloading " + repository.save(new Expression("2+3", new BigDecimal("6"))));			
 			log.info("Preloading " + repository.save(new Expression("3.145725", new BigDecimal("3.145725"))));
+			Expression labledExpressin = new Expression("365*10*60", new BigDecimal("3.145725"));
+			labledExpressin.setLabel("MINUTES_IN_YEAR");
+			repository.save( labledExpressin );
 		};
 	}
 }

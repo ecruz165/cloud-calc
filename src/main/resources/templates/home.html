@@ -39,6 +39,7 @@
 
 .panel {
   display: none;
+  color: #fff;
 }
 
 .panel.active {
@@ -50,6 +51,20 @@ width:100%;
 
 .mdc-tab-bar{
   color: white !important;
+}
+
+.mdc-list--avatar-list .mdc-list-item__graphic{
+color: white;
+}
+.mdc-list-item__primary-text {
+color:white;}
+.mdc-list-item__secondary-text{
+color: #fff;
+}
+.mdc-tab .mdc-tab__text-label{
+color: white;
+}.mdc-tab .mdc-tab__icon{
+color: white;
 }
 </style>
 
@@ -229,17 +244,17 @@ width:100%;
   <div class="panels">
 
     <div id="panel-1" role="tabpanel" aria-hidden="false" class="panel active" >
-		<h1 class="mdc-typography--headline6">History</h1>
+
 		<div id="history-list"></div>
    </div>
 
    <div id="panel-2" role="tabpanel" aria-hidden="true" class="panel" >
-		<h1 class="mdc-typography--headline5">Saved Expressions</h1>
+
 		<div id="label-list"></div>
 	</div>
 
    	<div id="panel-3" role="tabpanel" aria-hidden="true" class="panel" >
-		<h1 class="mdc-typography--headline5">Notes</h1>
+
 		<div id="notes-list"></div>		
 	</div>
 
@@ -385,12 +400,22 @@ document.getElementById('solve'		).addEventListener('click', function () { store
 </script>
 
 <template id="history-list-template">
+<ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
-<div>
-<h5>{{this.expression}}={{this.result}}</h5>
-<p>{{this.created}}</p>
-</div>
+<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="b3494dda-d88a-46e2-8e8d-c846ec6ce93b" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+	{{#if labeled}}	
+	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
+	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>	
+	{{else}}
+	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">save_alt</span>
+	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.expression}}={{this.result}}</span>
+	{{/if}}
+
+	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
+</li>
 {{/expresssions}}
+</ul>
+
 </template>
 
 

@@ -1,5 +1,7 @@
 package com.sample.application.cloudcalc.controllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import com.sample.application.cloudcalc.service.CalculatorService;
 
 @RestController
 public class ApiRestController {
+
+	private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm a");
 
 	private CalculatorService calculatorService;
 	
@@ -64,8 +68,10 @@ public class ApiRestController {
 		model.setId(domain.getId());
 		model.setExpression(domain.getExpression());
 		model.setResult(domain.getResult());
-		model.setCreated(domain.getCreated());
+		model.setCreated(format(domain.getCreated()));
+		model.setLabeled( domain.getLabel()!=null ? true:false );
 		model.setLabel(domain.getLabel());
+		
 		return model;
 	}
 
@@ -74,8 +80,20 @@ public class ApiRestController {
 		domain.setId(model.getId());
 		domain.setExpression(model.getExpression());
 		domain.setResult(model.getResult());
-		domain.setCreated(model.getCreated());
+		domain.setCreated(parse(model.getCreated()));
 		domain.setLabel(model.getLabel());
 		return domain;
 	}
+	
+	private synchronized static String format(LocalDateTime datetime) {
+            String date = formatter.format(datetime);
+            System.out.println("Successfully formatted Date " + date);
+            return date;
+    }
+	private synchronized static LocalDateTime parse(String datetime) {
+		if (datetime ==null)
+			return null;
+		LocalDateTime date = LocalDateTime.parse(datetime, formatter);
+        return date;
+}
 }
