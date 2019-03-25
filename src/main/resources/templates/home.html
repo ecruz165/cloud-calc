@@ -343,7 +343,7 @@ function calculator( state='' ,action) {
       case 'ENTER_DECIMAL':
           return state+'.';
       case 'ENTER_OPERATOR':
-    	  return state+''+action.operator;
+    	  return state+''+action.value;
       default:
     	  return state;
     }
