@@ -5,7 +5,7 @@ This sample code was a coding challenge given to me to evaluate my Senior Java F
 
 Live Demo
 ----------
-http://ec2-18-209-241-49.compute-1.amazonaws.com/
+http://ec2-3-83-78-93.compute-1.amazonaws.com/
 
 The Challenge
 ----------
