@@ -405,7 +405,6 @@ function calculator( state='' ,action) {
 }
 
 function openExpressionDialog(id, expression){
-	//alert(id+' '+ name);
 	var idEL    = document.getElementById('expressionId');
 	var expressionEl = document.getElementById('expressionValue');
 	idEL.value=id;
@@ -421,7 +420,6 @@ function saveExpressionLabel(id, label){
 	).then(function(response) {
 		    return response.json();
 		  }).then(function(data) {
-				alert('attempting to save');
 			  renderHistory();
 		  });
 	return id;
