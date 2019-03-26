@@ -287,7 +287,7 @@ width: 100%;
 
         <form id="form" action="#">
           <div class="mdc-text-field">
-            <input type="text" id="expressionName" name="expressionName" class="mdc-text-field__input"/>            
+            <input type="text" id="expressionName" name="expressionName" class="mdc-text-field__input" required="required"/>            
             <input type="hidden" id="expressionId" name="expressionId" value="1"/>
             
             <label class="mdc-floating-label" for="my-text-field">Name</label>
@@ -393,6 +393,13 @@ function calculator( state='' ,action) {
       case 'ENTER_DECIMAL':
           return state+'.';
       case 'ENTER_OPERATOR':
+    	  if (state.length==0&& '-'ne action.value){
+    		  showErrorIndicator();
+    		  return state;
+    	  } else if(action.value==state.substring(state.length-1, state.length)){
+    		  showErrorIndicator();
+    		  return state;
+    	  }
     	  return state+''+action.value;
       case 'OPEN_SAVE_EXPRESSION_DIALOG':
     	  openExpressionDialog( action.id, action.expression);
@@ -402,6 +409,11 @@ function calculator( state='' ,action) {
       default:
     	  return state;
     }
+}
+
+function showErrorIndicator(){
+	var expressionEl = document.getElementById('expressionValue');
+	//
 }
 
 function openExpressionDialog(id, expression){

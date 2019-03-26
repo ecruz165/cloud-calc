@@ -64,7 +64,6 @@
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-java8time</artifactId>
-			<version>${thymeleaf-extras-java8time.version}</version>
 		</dependency>
 
 		<dependency>
@@ -112,18 +111,12 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+
 		<!-- https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52 -->
 		<dependency>
 			<groupId>com.vladmihalcea</groupId>
 			<artifactId>hibernate-types-52</artifactId>
 			<version>${hibernate-types-52.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.tngtech.java</groupId>
-			<artifactId>junit-dataprovider</artifactId>
-			<version>${junit-dataprovider.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
