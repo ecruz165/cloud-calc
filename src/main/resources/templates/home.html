@@ -69,6 +69,13 @@ color: white;
 .mdc-text-field{
 width: 100%;
 }
+
+.expressionInputValid {
+	background-color: white;
+}
+.expressionInputError {
+	background-color: red;
+}
 </style>
 
 
@@ -91,7 +98,7 @@ width: 100%;
 	<div class="mdc-layout-grid__cell 
    					mdc-layout-grid__cell--span-4-phone
    					mdc-layout-grid__cell--span-8-tablet
-   					mdc-layout-grid__cell--span-12-desktop" style="background-color: white;">
+   					mdc-layout-grid__cell--span-12-desktop expressionInputValid" id ="expressionDisplayContainer" >
    					
    	<p id="expressionDisplay" style="min-height: 19px;padding-left: 12px;">$$ $$</p>
 	</div>
@@ -367,15 +374,11 @@ function calculator( state='' ,action) {
     	 return state;
       case 'VIEW_HISTORY':
   		renderHistory();
-    	renderLabels();
       	return state;
       case 'VIEW_LABELS':
-    	renderHistory();
     	renderLabels();
       	return state;
       case 'VIEW_COMMENTS':
-      	renderHistory();
-    	renderLabels(); 
       	 return state;
       case 'LOAD_EXPRESSION_FROM_HISTORY':
   		state = action.expression;
@@ -383,24 +386,26 @@ function calculator( state='' ,action) {
       case 'ENTER_DIGIT':
         return state+''+action.value;
       case 'CLEAR_EXPRESSION':
-        	state = ' ';
+        	state = '';
     	  return state;    	  
       case 'GROUP_EXPRESSION':
     	  return '('+state+')';
       case 'SUBMIT_EXPRESSION':
-    	  state = solve(state);
+    	  if (isValidExpression( state)){
+	    	  state = solve(state);
+	    	  return state;
+    	  }
+    	  showErrorIndicator();
     	  return state;  
       case 'ENTER_DECIMAL':
           return state+'.';
       case 'ENTER_OPERATOR':
-    	  if (state.length==0&& '-'ne action.value){
-    		  showErrorIndicator();
-    		  return state;
-    	  } else if(action.value==state.substring(state.length-1, state.length)){
-    		  showErrorIndicator();
-    		  return state;
+    	  if (isValidInput(state, action.value)){
+    		  state = state+''+action.value;
+    	  	return state;
     	  }
-    	  return state+''+action.value;
+    	  showErrorIndicator();
+    	  return state;
       case 'OPEN_SAVE_EXPRESSION_DIALOG':
     	  openExpressionDialog( action.id, action.expression);
     	  return state;
@@ -411,9 +416,40 @@ function calculator( state='' ,action) {
     }
 }
 
+function isValidExpression(current){
+	if (current.length<3){
+		return false;
+	} else if (isOperator(current.substring(current.length-1, current.length))){
+		return false;
+	}
+	return true;
+}
+
+function isValidInput(current, input){
+	if (current.length==0 && isOperator(input) && (input!='-')) {
+		return false;
+	} else if (current.length>0 && isOperator(input) && isOperator(current.substring(current.length-1, current.length))) {
+		return false;
+	}
+	return true;
+}
+
+function isOperator(input){
+	regexConst = /\/|\+|\-|\*|\=/g;
+	if ( regexConst.test(input)){
+		return true;}
+	else {
+		return false;}
+}
+
 function showErrorIndicator(){
-	var expressionEl = document.getElementById('expressionValue');
-	//
+	var expressionEl = document.getElementById('expressionDisplayContainer');
+	expressionEl.classList.add("expressionInputError");
+	setTimeout( function() {
+			expressionEl.classList.remove("expressionInputError")
+			expressionEl.classList.add("expressionInputValid")
+		}, 200
+	);
 }
 
 function openExpressionDialog(id, expression){
@@ -477,7 +513,7 @@ document.getElementById('add'		).addEventListener('click', function () { store.d
 document.getElementById('subtract'	).addEventListener('click', function () { store.dispatch({ type: 'ENTER_OPERATOR', value: '-'}) });
 document.getElementById('multiply'	).addEventListener('click', function () { store.dispatch({ type: 'ENTER_OPERATOR', value: '*'}) });
 document.getElementById('divide'	).addEventListener('click', function () { store.dispatch({ type: 'ENTER_OPERATOR', value: '/'}) });
-document.getElementById('solve'		).addEventListener('click', function () { store.dispatch({ type: 'SUBMIT_EXPRESSION'	}) });
+document.getElementById('solve'		).addEventListener('click', function () { store.dispatch({ type: 'SUBMIT_EXPRESSION', value: '='	}) });
 document.getElementById('history'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_HISTORY'	}) });
 document.getElementById('labels'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_LABELS'	}) });
 document.getElementById('comments'	).addEventListener('click', function () { store.dispatch({ type: 'VIEW_COMMENTS'}) });
