@@ -6,6 +6,7 @@ import static com.sample.application.cloudcalc.model.Operators.MULTIPLY;
 import static com.sample.application.cloudcalc.model.Operators.PLUS;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -140,8 +141,9 @@ public class CalculatorServiceImpl implements CalculatorService {
 			return aBD.subtract(bBD).toString();
 		} else 	if (MULTIPLY.equals(operator)) {
 			return aBD.multiply(bBD).toString();
-		}else 	if (DIVIDE.equals(operator)) {
-			return aBD.divide(bBD).toString();
+		} else 	if (DIVIDE.equals(operator)) {
+			BigDecimal result = aBD.divide(bBD,32, RoundingMode.HALF_UP);
+			return result.toString();
 		} else 
 			throw new Exception("Invalid expression provided");
 	}

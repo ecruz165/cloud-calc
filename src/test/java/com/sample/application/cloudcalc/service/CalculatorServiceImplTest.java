@@ -94,17 +94,7 @@ public class CalculatorServiceImplTest {
 	public void test_complex_scenario3()throws Exception {
 		Expression eq = new Expression("-8/-4");
 		eq = calculatorService.evaluate(eq);
-		assertTrue(eq.getResult().equals(new BigDecimal(2)));
-		assertEquals( new BigDecimal(2), eq.getResult() );			
+		assertTrue( eq.getResult().compareTo(new BigDecimal(2))==0 );			
 	}
 
-	@Test
-	public void test_complex_scenario6()throws Exception {
-		Expression eq = new Expression("6/9999");
-		eq = calculatorService.evaluate(eq);
-		assertTrue(eq.getResult().equals(new BigDecimal(2)));
-		assertEquals( new BigDecimal(2), eq.getResult() );			
-	}
-	
-	
 }

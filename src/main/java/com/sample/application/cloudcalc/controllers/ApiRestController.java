@@ -1,5 +1,6 @@
 package com.sample.application.cloudcalc.controllers;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -84,7 +85,7 @@ public class ApiRestController {
 		ExpressionModel model = new ExpressionModel();
 		model.setId(domain.getId());
 		model.setExpression(domain.getExpression());
-		model.setResult(domain.getResult());
+		model.setResult(domain.getResult().toPlainString());
 		model.setCreated(format(domain.getCreated()));
 		model.setLabeled( domain.getLabel()!=null ? true:false );
 		model.setLabel(domain.getLabel());
@@ -96,7 +97,9 @@ public class ApiRestController {
 		Expression domain = new Expression();
 		domain.setId(model.getId());
 		domain.setExpression(model.getExpression());
-		domain.setResult(model.getResult());
+		if (model.getResult()!=null) {
+			domain.setResult(new BigDecimal(model.getResult()));
+		}
 		domain.setCreated(parse(model.getCreated()));
 		domain.setLabel(model.getLabel());
 		return domain;
