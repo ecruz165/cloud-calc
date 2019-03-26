@@ -107,7 +107,6 @@ public class ApiRestController {
 	
 	private synchronized static String format(LocalDateTime datetime) {
             String date = formatter.format(datetime);
-            System.out.println("Successfully formatted Date " + date);
             return date;
     }
 	private synchronized static LocalDateTime parse(String datetime) {

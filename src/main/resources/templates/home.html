@@ -365,9 +365,13 @@ const expressionDisplayEl = document.getElementById('expressionDisplay');
 function calculator( state='' ,action) {
 	console.log('Calculator action: '+ action.type +' expression: '+ state +' result: '+ action.result);
     switch (action.type) {
-    case 'ADD_LABLED_ITEM':
-		state = state+''+action.label;
-		 return state;
+    case 'ADD_LABLED_ITEM':;
+		if (isValidInput(state, action.value)){
+		  	state = state+''+action.value;
+			return state;
+	  	}
+		showErrorIndicator();
+		return state;
     case 'DISPLAY_RESULTS':
 		state = action.result;
 		renderHistory();
@@ -426,10 +430,20 @@ function isValidExpression(current){
 }
 
 function isValidInput(current, input){
-	if (current.length==0 && isOperator(input) && (input!='-')) {
-		return false;
-	} else if (current.length>0 && isOperator(input) && isOperator(current.substring(current.length-1, current.length))) {
-		return false;
+	if (isNaN(input) ){
+		if (current.length==0 ){
+			if (isOperator(input) && (input!='-')){
+				return false;
+			}
+		} else  {
+			 if ( isOperator(input) && isOperator(current.substring(current.length-1, current.length))) {
+					alert('for operator' +current +': '+input);
+					return false;
+				}  else if (!isOperator(input) && !isOperator(current.substring(current.length-1, current.length)) ){
+					alert('for label' +current +': '+input);
+					return false;
+				}
+		}
 	}
 	return true;
 }
@@ -598,7 +612,7 @@ function addEventListenersToLabels() {
 	var myFunction = function() {
 	    var idValue = this.getAttribute("id");
 	    var labelValue = this.getAttribute("title");
-	    store.dispatch({ type: 'ADD_LABLED_ITEM', id: idValue, label: labelValue});
+	    store.dispatch({ type: 'ADD_LABLED_ITEM', id: idValue, value: labelValue});
 	};
 	for (var i = 0; i < classname.length; i++) {
 	    classname[i].addEventListener('click', myFunction, false);
