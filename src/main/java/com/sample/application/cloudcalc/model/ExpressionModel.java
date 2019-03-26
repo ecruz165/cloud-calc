@@ -18,5 +18,9 @@ public class ExpressionModel {
 	public ExpressionModel(String expression) {
 		this.expression = expression;
 	}
+	public ExpressionModel(Long id, String label) {
+		this.id = id;
+		this.label = label;
+	}
 	
 }

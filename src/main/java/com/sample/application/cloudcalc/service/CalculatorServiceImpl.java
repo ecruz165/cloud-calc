@@ -1,13 +1,13 @@
 package com.sample.application.cloudcalc.service;
 
+import static com.sample.application.cloudcalc.model.Operators.DIVIDE;
+import static com.sample.application.cloudcalc.model.Operators.MINUS;
+import static com.sample.application.cloudcalc.model.Operators.MULTIPLY;
+import static com.sample.application.cloudcalc.model.Operators.PLUS;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import static com.sample.application.cloudcalc.model.Operators.PLUS;
-import static com.sample.application.cloudcalc.model.Operators.MINUS;
-import static com.sample.application.cloudcalc.model.Operators.MULTIPLY;
-import static com.sample.application.cloudcalc.model.Operators.DIVIDE;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,7 +76,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 			String[] operand = findPartialExpression(DIVIDE, expression, operands);
 			String val = operand[0];
 			String newVal =  operand[1];
-			String resolution = expression.replace(val, newVal);	
+			String resolution = expression.replace(val, newVal);
 			return solve(resolution);		
 		} else if (expression.contains(MULTIPLY)) {
 			String[] operand = findPartialExpression(MULTIPLY, expression, operands);
@@ -144,6 +144,14 @@ public class CalculatorServiceImpl implements CalculatorService {
 			return aBD.divide(bBD).toString();
 		} else 
 			throw new Exception("Invalid expression provided");
+	}
+
+	@Override
+	public Expression update(Expression updated) throws Exception {
+		Expression domain = calculatorRepository.getOne(updated.getId());
+		domain.setLabel(updated.getLabel());
+		updated = calculatorRepository.save(domain);
+		return updated;
 	}
 
 

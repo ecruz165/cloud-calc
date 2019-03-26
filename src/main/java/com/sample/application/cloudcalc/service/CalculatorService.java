@@ -13,5 +13,7 @@ public interface CalculatorService {
 	void removeExpression(Expression eq) throws Exception;
 
 	Expression evaluate(Expression eq) throws Exception;
+
+	Expression update(Expression domain) throws Exception;
 	
 }

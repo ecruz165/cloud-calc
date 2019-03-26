@@ -66,6 +66,9 @@ color: white;
 }.mdc-tab .mdc-tab__icon{
 color: white;
 }
+.mdc-text-field{
+width: 100%;
+}
 </style>
 
 
@@ -262,10 +265,59 @@ color: white;
 </section>
     		
    		</div>
+   		
+   		
+
    	</div>
   
 </div>
 
+
+
+
+<div class="mdc-dialog"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="my-dialog-title"
+     aria-describedby="my-dialog-content">
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title" id="my-dialog-title">Enter label for expression</h2>
+      <div class="mdc-dialog__content" id="my-dialog-content">
+
+        <form id="form" action="#">
+          <div class="mdc-text-field">
+            <input type="text" id="expressionName" name="expressionName" class="mdc-text-field__input"/>            
+            <input type="hidden" id="expressionId" name="expressionId" value="1"/>
+            
+            <label class="mdc-floating-label" for="my-text-field">Name</label>
+            <div class="mdc-line-ripple"></div>
+          </div>
+        </form>
+              <span id="expressionValue">$$ 4+ 5/5 $$</span>
+      </div>
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">Cancel</button>
+        <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="accept">Save</button>
+      </footer>
+    </div>
+  </div>
+  <div class="mdc-dialog__scrim"></div>
+</div>
+   		
+<script type="text/javascript">
+var dialog = null;
+	window.addEventListener('DOMContentLoaded', function() {
+		dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'));
+		mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
+		dialog.listen('MDCDialog:closed', function(event) {
+		  if (event.detail.action === 'close') {
+		    return;
+		  }
+		  store.dispatch({ type: 'CREATE_LABEL_FOR_EXPRESSION', id:form.elements.expressionId.value, label: form.elements.expressionName.value })
+		});
+	});
+</script>
 <script type="module" src="/3rdparty/fetch-3.0.0/fetch.min.js"></script>
 <script src="/3rdparty/handlebars-4.1.1/handlebars.min.js"></script>
 <script src="/3rdparty/mcw-0.44.1/material-components-web.min.js"></script>
@@ -331,8 +383,6 @@ function calculator( state='' ,action) {
       case 'ENTER_DIGIT':
         return state+''+action.value;
       case 'CLEAR_EXPRESSION':
-        	renderHistory();
-        	renderLabels(); 
         	state = ' ';
     	  return state;    	  
       case 'GROUP_EXPRESSION':
@@ -344,14 +394,42 @@ function calculator( state='' ,action) {
           return state+'.';
       case 'ENTER_OPERATOR':
     	  return state+''+action.value;
+      case 'OPEN_SAVE_EXPRESSION_DIALOG':
+    	  openExpressionDialog( action.id, action.expression);
+    	  return state;
+      case 'CREATE_LABEL_FOR_EXPRESSION':
+    	  saveExpressionLabel( action.id, action.label);
       default:
     	  return state;
     }
 }
 
+function openExpressionDialog(id, expression){
+	//alert(id+' '+ name);
+	var idEL    = document.getElementById('expressionId');
+	var expressionEl = document.getElementById('expressionValue');
+	idEL.value=id;
+	expressionEl.innerHTML = expression;	
+	dialog.open();
+}
+
+function saveExpressionLabel(id, label){
+	fetch('/api/expressions/update/', {
+		method: 'post',
+	    body: JSON.stringify({'id': id, 'label': label}),
+		headers:{'Content-Type': 'application/json'}}
+	).then(function(response) {
+		    return response.json();
+		  }).then(function(data) {
+				alert('attempting to save');
+			  renderHistory();
+		  });
+	return id;
+}
+
 
 function solve(state){
-	fetch('/expressions/solve/', {
+	fetch('/api/expressions/solve/', {
 		method: 'post',
 	    body: JSON.stringify({expression: state}),
 		headers:{'Content-Type': 'application/json'}}
@@ -400,17 +478,18 @@ document.getElementById('comments'	).addEventListener('click', function () { sto
 <ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
 	{{#if labeled}}	
-<li class="history-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
-
-	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
-	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
-	{{else}}
-<li class="history-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.expression}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
-	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">save_alt</span>
-	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.expression}}={{this.result}}</span>
-	{{/if}}
-	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
+<li class="history-item mdc-list-item mdc-ripple-upgraded" tabindex="0" 	id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+	<span class="history-item-update  mdc-list-item__graphic material-icons"id="{{this.id}}-update" title="{{this.label}}" aria-hidden="true">label</span>
+	<span class="history-item-select  mdc-list-item__text"					id="{{this.id}}-select" title="{{this.label}}"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
+	<span class="                     mdc-list-item__secondary-text"		>{{ this.created }}</span></span>
 </li>
+	{{else}}
+<li class="history-item mdc-list-item mdc-ripple-upgraded" tabindex="0"  style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+	<span class="history-item-save   mdc-list-item__graphic material-icons" id="{{this.id}}-save" title="{{this.expression}}" aria-hidden="true">save_alt</span>
+	<span class="history-item-select mdc-list-item__text" 					id="{{this.id}}-select" title="{{this.expression}}"><span class="mdc-list-item__primary-text">{{this.expression}}={{this.result}}</span>
+	<span class="                    mdc-list-item__secondary-text"			>{{ this.created }}</span></span>
+</li>
+	{{/if}}
 {{/expresssions}}
 </ul>
 </template>
@@ -418,10 +497,10 @@ document.getElementById('comments'	).addEventListener('click', function () { sto
 <template id="labels-list-template">
 <ul class="mdc-list  mdc-list--two-line mdc-list--avatar-list">
 {{#expresssions}}
-<li class="labeled-item mdc-list-item mdc-ripple-upgraded" tabindex="0" id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
-	<span class="mdc-list-item__graphic material-icons" aria-hidden="true">label</span>
-	<span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
-	<span class="mdc-list-item__secondary-text">{{ this.created }}</span></span>
+<li class="labeled-item mdc-list-item mdc-ripple-upgraded" tabindex="0" 	id="{{this.id}}" title="{{this.label}}" style="--mdc-ripple-fg-size:237px; --mdc-ripple-fg-scale:1.74047; --mdc-ripple-fg-translate-start:-74.332px, -81.5586px; --mdc-ripple-fg-translate-end:79.5px, -82.5px;">
+	<span class="labeled-item-update  mdc-list-item__graphic material-icons"id="{{this.id}}-update" title="{{this.label}}" aria-hidden="true">label</span>
+	<span class="labeled-item-select  mdc-list-item__text" 					id="{{this.id}}-select" title="{{this.label}}" ><span class="mdc-list-item__primary-text">{{this.label}} ( {{this.expression}}={{this.result}} )</span>
+	<span class="					  mdc-list-item__secondary-text" 		>{{ this.created }}</span></span>
 </li>
 {{/expresssions}}
 </ul>
@@ -429,7 +508,7 @@ document.getElementById('comments'	).addEventListener('click', function () { sto
 
 <script type="text/javascript">
 function addEventListenersToHistory(){
-	var classname = document.getElementsByClassName("history-item");
+	var classname = document.getElementsByClassName("history-item-select");
 	var myFunction = function() {
 	    var idValue = this.getAttribute("id");
 	    var expressionValue = this.getAttribute("title");
@@ -439,6 +518,18 @@ function addEventListenersToHistory(){
 	    classname[i].addEventListener('click', myFunction, false);
 	}
 }
+function addEventListenersToHistorySave(){
+	var classname = document.getElementsByClassName("history-item-save");
+	var myFunction = function() {
+	    var idValue = this.getAttribute("id").split('-');
+	    var expressionValue = this.getAttribute("title");
+	    store.dispatch({ type: 'OPEN_SAVE_EXPRESSION_DIALOG', id: idValue[0], expression: expressionValue});
+	};
+	for (var i = 0; i < classname.length; i++) {
+	    classname[i].addEventListener('click', myFunction, false);
+	}
+}
+
 function renderHistory() {
 	var historyListTemplate     = document.getElementById('history-list-template').innerHTML;
 	var historyListCompiledTemplate       = Handlebars.compile(historyListTemplate);
@@ -452,11 +543,12 @@ function renderHistory() {
 			var html = historyListCompiledTemplate(data);
 			historyList.innerHTML = html;
 			addEventListenersToHistory();
+			addEventListenersToHistorySave();
 			return json;
 		});
 }
 function addEventListenersToLabels() {
-	var classname = document.getElementsByClassName("labeled-item");
+	var classname = document.getElementsByClassName("labeled-item-select");
 	var myFunction = function() {
 	    var idValue = this.getAttribute("id");
 	    var labelValue = this.getAttribute("title");
@@ -485,5 +577,7 @@ function renderLabels() {
 renderHistory();
 renderLabels();
 </script>
+
+
 </body>
 </html>

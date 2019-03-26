@@ -40,15 +40,25 @@ public class ApiRestController {
 		List<ExpressionModel> modelList = convertToModelList(domainList);
 		return modelList;
 	}
+	@PostMapping("/api/expressions/update")
+	ExpressionModel saveExpression(@RequestBody ExpressionModel model) {
+		Expression domain = convertToDomain(model);
+		try {
+			domain = calculatorService.update(domain);
+			model = convertToModel(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return model;
+	}
 
-	@PostMapping("/expressions/solve")
+	@PostMapping("/api/expressions/solve")
 	ExpressionModel newEmployee(@RequestBody ExpressionModel expressionModel) {
 		Expression domain = convertToDomain(expressionModel);
 		try {
 			domain = calculatorService.evaluate(domain);
 			expressionModel = convertToModel(domain);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return expressionModel;
