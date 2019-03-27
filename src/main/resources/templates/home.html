@@ -372,6 +372,13 @@ function calculator( state='' ,action) {
 	  	}
 		showErrorIndicator();
 		return state;
+    case 'ENTER_DIGIT':
+  		if (isValidInput(state, action.value)){
+		  	state = state+''+action.value;
+			return state;
+	  	}
+		showErrorIndicator();
+		return state;		
     case 'DISPLAY_RESULTS':
 		state = action.result;
 		renderHistory();
@@ -387,8 +394,6 @@ function calculator( state='' ,action) {
       case 'LOAD_EXPRESSION_FROM_HISTORY':
   		state = action.expression;
   	    return state;
-      case 'ENTER_DIGIT':
-        return state+''+action.value;
       case 'CLEAR_EXPRESSION':
         	state = '';
     	  return state;    	  
@@ -427,6 +432,8 @@ function isValidExpression(current){
 		return false;
 	} else if (isOperator(current.substring(current.length-1, current.length))){
 		return false;
+	} else if (!containsOperator(current)){
+		return false;
 	}
 	return true;
 }
@@ -443,9 +450,26 @@ function isValidInput(current, input){
 				}  else if (!isOperator(input) && !isOperator(current.substring(current.length-1, current.length)) ){
 					return false;
 				}
+			 return true;
+		}
+	}
+	
+	if (current.length>0){
+		var lastEntered = current.substring(current.length-1, current.length);
+
+		if (!isOperator(lastEntered) && isNaN(lastEntered)){
+			return false;
 		}
 	}
 	return true;
+}
+
+function containsOperator(expression){
+	var regex = /\/|\+|\-|\*/g;
+	if( expression.match(regex)!=null){
+		return true;
+	};
+	
 }
 
 function isOperator(input){
