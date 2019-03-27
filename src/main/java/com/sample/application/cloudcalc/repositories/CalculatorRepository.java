@@ -16,4 +16,6 @@ public interface CalculatorRepository extends JpaRepository<Expression, Long>{
 
 	@Query("SELECT e FROM Expression e where e.label IS NOT NULL") 
 	List<Expression> findByLabelOrderByCreatedDesc();
+
+	Expression findExpressionByLabel(String operand);
 }

@@ -9,6 +9,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service("calculatorService")
 public class CalculatorServiceImpl implements CalculatorService {
-
+	
 	private CalculatorRepository calculatorRepository;
 
 	@Autowired
@@ -65,6 +67,22 @@ public class CalculatorServiceImpl implements CalculatorService {
 		expression = expression.replace(" ", "");
 		
 		String[] operands = extractOperands(expression);
+		
+		String regex = "^[a-zA-Z_]+$";
+		Pattern pattern = Pattern.compile(regex);
+		
+		// cycle through operands and convert label to value;
+		for (int i=0;i<operands.length;i++ ) {
+			 Matcher matcher = pattern.matcher(operands[i]);
+			if (matcher.matches()) {
+				Expression labeledExpression = calculatorRepository.findExpressionByLabel(operands[i]);
+				log.info("Look up label: "+ operands[i] +"="+ labeledExpression.getResult().toString());
+				operands[i]=labeledExpression.getResult().toString();
+				expression = expression.replaceFirst(labeledExpression.getLabel(), labeledExpression.getResult().toString());
+			}
+		}
+		
+	
 		
 		if (operands.length==1) {
 			/*TODO 

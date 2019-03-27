@@ -96,5 +96,12 @@ public class CalculatorServiceImplTest {
 		eq = calculatorService.evaluate(eq);
 		assertTrue( eq.getResult().compareTo(new BigDecimal(2))==0 );			
 	}
+	@Test
+	public void complex_using_label() throws Exception {
+		Expression eq = new Expression("MINUTES_IN_YEAR+5");
+		eq = calculatorService.evaluate(eq);
+		System.out.println(eq.getResult().toString());
+		assertTrue( eq.getResult().compareTo(new BigDecimal("8.15"))==0 );	
+	}
 
 }
