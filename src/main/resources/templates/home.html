@@ -437,10 +437,8 @@ function isValidInput(current, input){
 			}
 		} else  {
 			 if ( isOperator(input) && isOperator(current.substring(current.length-1, current.length))) {
-					alert('for operator' +current +': '+input);
 					return false;
 				}  else if (!isOperator(input) && !isOperator(current.substring(current.length-1, current.length)) ){
-					alert('for label' +current +': '+input);
 					return false;
 				}
 		}
