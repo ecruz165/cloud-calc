@@ -423,6 +423,8 @@ function calculator( state='' ,action) {
 function isValidExpression(current){
 	if (current.length<3){
 		return false;
+	} else if (!isNaN(current)){
+		return false;
 	} else if (isOperator(current.substring(current.length-1, current.length))){
 		return false;
 	}
