@@ -26,6 +26,7 @@ nbdist/
 .git
 CVS
 .svn
+.clover
 .hg
 .lock-wscript
 .wafpickle-N
