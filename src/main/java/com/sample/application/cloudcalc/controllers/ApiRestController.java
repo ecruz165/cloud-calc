@@ -1,6 +1,5 @@
 package com.sample.application.cloudcalc.controllers;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,21 +27,34 @@ public class ApiRestController {
 	public ApiRestController(  CalculatorService calculatorService) {
 		this.calculatorService = calculatorService;
 	}
-	
-	@GetMapping("/api/expressions/labled")
-	List<ExpressionModel> getAllLabels() {
-		List<Expression> domainList = calculatorService.findAllLabels();
+		
+	@GetMapping(RestfulServicePaths.GET_EXPRESSIONS)
+	List<ExpressionModel> findAllExpressionHistory() {
+		List<Expression> domainList = calculatorService.findAllHistoryOfEntered();
 		List<ExpressionModel> modelList = convertToModelList(domainList);
 		return modelList;
 	}
 	
-	@GetMapping("/api/expressions")
-	List<ExpressionModel> getAll() {
-		List<Expression> domainList = calculatorService.findAll();
+	@GetMapping(RestfulServicePaths.GET_EXPRESSIONS_LABELS)
+	List<ExpressionModel> findAllExpressionsLabled() {
+		List<Expression> domainList = calculatorService.findAllLabelsOfEntered();
 		List<ExpressionModel> modelList = convertToModelList(domainList);
 		return modelList;
 	}
-	@PostMapping("/api/expressions/update")
+	
+	@PostMapping(RestfulServicePaths.POST_EXPRESSION_CREATE)
+	ExpressionModel newEmployee(@RequestBody ExpressionModel expressionModel) {
+		Expression domain = convertToDomain(expressionModel);
+		try {
+			domain = calculatorService.evaluate(domain);
+			expressionModel = convertToModel(domain);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return expressionModel;
+	}
+	
+	@PutMapping(RestfulServicePaths.PUT_EXPRESSION_UPDATE)
 	ExpressionModel saveExpression(@RequestBody ExpressionModel model) {
 		Expression domain = convertToDomain(model);
 		try {
@@ -53,18 +66,6 @@ public class ApiRestController {
 		return model;
 	}
 
-	@PostMapping("/api/expressions/solve")
-	ExpressionModel newEmployee(@RequestBody ExpressionModel expressionModel) {
-		Expression domain = convertToDomain(expressionModel);
-		try {
-			domain = calculatorService.evaluate(domain);
-			expressionModel = convertToModel(domain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return expressionModel;
-	}
-
 	private List<ExpressionModel> convertToModelList(List<Expression> domainList) {
 		List<ExpressionModel> list = new ArrayList<ExpressionModel>();
 		for (Expression expression: domainList) {
@@ -72,20 +73,13 @@ public class ApiRestController {
 		}
 		return list;
 	}
-	
-	private List<Expression> convertToDomainList(List<ExpressionModel> modelList) {
-		List<Expression> list = new ArrayList<Expression>();
-		for (ExpressionModel model: modelList) {
-			list.add(convertToDomain(model));
-		}
-		return list;
-	}
+
 	
 	private ExpressionModel convertToModel(Expression domain) {
 		ExpressionModel model = new ExpressionModel();
 		model.setId(domain.getId());
 		model.setExpression(domain.getExpression());
-		model.setResult(domain.getResult().toPlainString());
+		model.setResult(domain.getResult());
 		model.setCreated(format(domain.getCreated()));
 		model.setLabeled( domain.getLabel()!=null ? true:false );
 		model.setLabel(domain.getLabel());
@@ -97,9 +91,8 @@ public class ApiRestController {
 		Expression domain = new Expression();
 		domain.setId(model.getId());
 		domain.setExpression(model.getExpression());
-		if (model.getResult()!=null) {
-			domain.setResult(new BigDecimal(model.getResult()));
-		}
+		domain.setResult(model.getResult());
+		
 		domain.setCreated(parse(model.getCreated()));
 		domain.setLabel(model.getLabel());
 		return domain;
@@ -109,10 +102,12 @@ public class ApiRestController {
             String date = formatter.format(datetime);
             return date;
     }
+	
 	private synchronized static LocalDateTime parse(String datetime) {
 		if (datetime ==null)
 			return null;
 		LocalDateTime date = LocalDateTime.parse(datetime, formatter);
         return date;
-}
+	}
+
 }

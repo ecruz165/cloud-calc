@@ -9,13 +9,12 @@ import com.sample.application.cloudcalc.domain.Expression;
 
 public interface CalculatorRepository extends JpaRepository<Expression, Long>{
 
-	@Override
-	List<Expression> findAll();
+	Expression findExpressionByLabel(String label);
 	
 	List<Expression> findAllByOrderByCreatedDesc();
 
-	@Query("SELECT e FROM Expression e where e.label IS NOT NULL") 
-	List<Expression> findByLabelOrderByCreatedDesc();
+	@Query("SELECT e FROM Expression e where e.label IS NOT NULL ORDER BY e.created DESC") 
+	List<Expression> findLabelsOrderByCreatedDesc();
 
-	Expression findExpressionByLabel(String operand);
+	
 }

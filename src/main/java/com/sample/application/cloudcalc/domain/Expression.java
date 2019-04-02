@@ -1,8 +1,8 @@
 package com.sample.application.cloudcalc.domain;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Entity;
+
+import com.sample.application.cloudcalc.service.ExpressionParser;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,13 +17,17 @@ public class Expression extends AbstractDomainClass {
 	
 	String expression; // number or arithmetic expression
 	
-	BigDecimal result; // only set result when label is defined
+	String result; // only set result when label is defined
 	
 	public Expression(String expression) {
 		this.expression = expression;
 	}
-	public Expression(String expression, BigDecimal result) {
+	public Expression(String expression, String result) {
 		this.expression = expression;
 		this.result = result;
+	}
+	public static Expression valueOf(String expression) throws Exception {
+		String result = ExpressionParser.evaluate(expression);
+		return new Expression(expression,result);
 	}
 }

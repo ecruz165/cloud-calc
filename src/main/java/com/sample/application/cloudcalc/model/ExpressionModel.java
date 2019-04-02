@@ -10,6 +10,7 @@ public class ExpressionModel {
 	boolean isLabeled = false;
 	String expression; // number or arithmetic expression
 	String result; // only set result when label is defined
+	Boolean resultNaN = false;
 	String created;
 	String label;		
 

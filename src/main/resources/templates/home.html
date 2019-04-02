@@ -373,7 +373,7 @@ function calculator( state='' ,action) {
 		showErrorIndicator();
 		return state;
     case 'ENTER_DIGIT':
-  		if (isValidInput(state, action.value)){
+  		if (isValidNumberInput(state, action.value)){
 		  	state = state+''+action.value;
 			return state;
 	  	}
@@ -407,7 +407,12 @@ function calculator( state='' ,action) {
     	  showErrorIndicator();
     	  return state;  
       case 'ENTER_DECIMAL':
-          return state+'.';
+    	  if (isValidDecimalInput(state, action.value)){
+    		  state = state+''+action.value;
+    	  	return state;
+    	  }
+    	  showErrorIndicator();
+    	  return state;
       case 'ENTER_OPERATOR':
     	  if (isValidInput(state, action.value)){
     		  state = state+''+action.value;
@@ -433,6 +438,31 @@ function isValidExpression(current){
 	} else if (isOperator(current.substring(current.length-1, current.length))){
 		return false;
 	} else if (!containsOperator(current)){
+		return false;
+	}
+	return true;
+}
+
+function isValidDecimalInput(current, input){
+	if (isNaN(input) ){
+		if (current.length>0 && input==current.substring(current.length-1, current.length)){
+			return false;
+		}
+		return true;
+	}	
+	return false;
+}
+
+function isValidNumberInput(current, input){	
+	if (current.length>0){
+		var lastEntered = current.substring(current.length-1, current.length);
+		if (lastEntered == "."){
+			return true;
+		} else if (!isNaN(lastEntered)){
+			return true;
+		} else if (isOperator(lastEntered) ){
+			return true;
+		}
 		return false;
 	}
 	return true;
@@ -499,8 +529,8 @@ function openExpressionDialog(id, expression){
 }
 
 function saveExpressionLabel(id, label){
-	fetch('/api/expressions/update/', {
-		method: 'post',
+	fetch('/api/expressions/'+id, {
+		method: 'put',
 	    body: JSON.stringify({'id': id, 'label': label}),
 		headers:{'Content-Type': 'application/json'}}
 	).then(function(response) {
@@ -513,7 +543,7 @@ function saveExpressionLabel(id, label){
 
 
 function solve(state){
-	fetch('/api/expressions/solve/', {
+	fetch('/api/expressions', {
 		method: 'post',
 	    body: JSON.stringify({expression: state}),
 		headers:{'Content-Type': 'application/json'}}
@@ -544,7 +574,7 @@ document.getElementById('six'		).addEventListener('click', function () { store.d
 document.getElementById('seven'		).addEventListener('click', function () { store.dispatch({ type: 'ENTER_DIGIT', value: 7 }) });
 document.getElementById('eight'		).addEventListener('click', function () { store.dispatch({ type: 'ENTER_DIGIT', value: 8 }) });
 document.getElementById('nine'		).addEventListener('click', function () { store.dispatch({ type: 'ENTER_DIGIT', value: 9 }) });
-document.getElementById('decimal'	).addEventListener('click', function () { store.dispatch({ type: 'ENTER_DECIMAL'}) });
+document.getElementById('decimal'	).addEventListener('click', function () { store.dispatch({ type: 'ENTER_DECIMAL', value: '.'}) });
 document.getElementById('clear'		).addEventListener('click', function () { store.dispatch({ type: 'CLEAR_EXPRESSION'}) });
 document.getElementById('group'		).addEventListener('click', function () { store.dispatch({ type: 'GROUP_EXPRESSION' 	}) });
 document.getElementById('add'		).addEventListener('click', function () { store.dispatch({ type: 'ENTER_OPERATOR', value: '+'}) });
@@ -646,7 +676,7 @@ function renderLabels() {
 	var labelsListTemplate     = document.getElementById('labels-list-template').innerHTML;
 	var labelsListCompiledTemplate       = Handlebars.compile(labelsListTemplate);
 	var labelsList     = document.getElementById('labels-list');
-	fetch('/api/expressions/labled', { method: 'get'})
+	fetch('/api/expressions/labels', { method: 'get'})
 		.then(function(response) {	return response.json();})
 		.then(function(json) {
 			  var    data = {

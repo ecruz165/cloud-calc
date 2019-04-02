@@ -1,14 +1,7 @@
 package com.sample.application.cloudcalc.service;
 
-import static com.sample.application.cloudcalc.model.Operators.DIVIDE;
-import static com.sample.application.cloudcalc.model.Operators.MINUS;
-import static com.sample.application.cloudcalc.model.Operators.MULTIPLY;
-import static com.sample.application.cloudcalc.model.Operators.PLUS;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,156 +16,97 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service("calculatorService")
 public class CalculatorServiceImpl implements CalculatorService {
-	
+
 	private CalculatorRepository calculatorRepository;
 
 	@Autowired
 	public CalculatorServiceImpl(CalculatorRepository calculatorRepository) {
-		this.calculatorRepository  = calculatorRepository;
+		this.calculatorRepository = calculatorRepository;
 	}
 
 	@Override
-	public void removeExpression(Expression eq) {
-		calculatorRepository.delete(eq);
-	}
-
-	@Override
-	public List<Expression> findAllLabels() {
-		return calculatorRepository.findByLabelOrderByCreatedDesc();
-	}
-
-	
-	@Override
-	public List<Expression> findAll() {
-		return calculatorRepository.findAllByOrderByCreatedDesc();
-	}
-
-	@Override
-	public Expression evaluate(Expression eq) throws Exception {
-		// An expression can be a constant expression or arithmetic expression 
-		log.info("Expression: " +  eq.getExpression() + "******" );
-		String expression = eq.getExpression();
-		expression = expression.replaceAll(" ","");
-		String value = solve(eq.getExpression());
-		eq.setResult(new BigDecimal(value));
-		calculatorRepository.save(eq);
-		return eq;
-	}
-	
-	private String solve(String expression) throws Exception {
-		log.info("Expression: " +  expression);
-		expression = expression.replace("-+", MINUS);
-		expression = expression.replace("+-", MINUS);
-		expression = expression.replace("--", PLUS);
-		expression = expression.replace(" ", "");
-		
-		String[] operands = extractOperands(expression);
-		
-		String regex = "^[a-zA-Z_]+$";
-		Pattern pattern = Pattern.compile(regex);
-		
-		// cycle through operands and convert label to value;
-		for (int i=0;i<operands.length;i++ ) {
-			 Matcher matcher = pattern.matcher(operands[i]);
-			if (matcher.matches()) {
-				Expression labeledExpression = calculatorRepository.findExpressionByLabel(operands[i]);
-				log.info("Look up label: "+ operands[i] +"="+ labeledExpression.getResult().toString());
-				operands[i]=labeledExpression.getResult().toString();
-				expression = expression.replaceFirst(labeledExpression.getLabel(), labeledExpression.getResult().toString());
-			}
-		}
-		
-	
-		
-		if (operands.length==1) {
-			/*TODO 
-			 * if not a number 
-			 * 		look up LABELS-
-			 * 		if label does not exists throw LABEL NOT FOUND EXCEPTION */
-			// constant expression 
-			return operands[0];
-		} else if (expression.contains(DIVIDE)) {
-			String[] operand = findPartialExpression(DIVIDE, expression, operands);
-			String val = operand[0];
-			String newVal =  operand[1];
-			String resolution = expression.replace(val, newVal);
-			return solve(resolution);		
-		} else if (expression.contains(MULTIPLY)) {
-			String[] operand = findPartialExpression(MULTIPLY, expression, operands);
-			String val = operand[0];
-			String newVal =  operand[1];
-			String resolution = expression.replace(val, newVal);	
-			return solve(resolution);
-		} else {
-			String[] operand = findPartialExpression(null, expression, operands);
-			String val = operand[0];
-			String newVal =  operand[1];
-			String resolution = expression.replace(val, newVal);	
-			return solve(resolution);
-		} 
-	}
-
-	private String[] extractOperands(String expression) {
-			String[] operands = expression.split("\\+|\\-|\\*|\\/");
-
-			if (operands.length==1) {
-				return operands ;
-			}
-			
-			List<String> cleansed = new ArrayList<String>();
-			for (int i=0; i< operands.length;i++) {
-				if ("".equals(operands[i])){
-					cleansed.add(MINUS+operands[++i]);
-				} else {
-					cleansed.add(operands[i]);
-				}
-			}
-			return cleansed.toString().replaceAll("\\[|\\]| ","").split(",");
-	}
-
-	private String[] findPartialExpression(String operator, String expression, String[] operands) throws Exception {
-		
-		int index=0;
-		for(int j=0; j< operands.length-1; j++) {
-			index= index + (operands[j].length());
-			String nextOperator = expression.substring(index,index+1);
-			operator= operator==null? nextOperator:operator;
-			String operatorFoundInExpression = expression.substring(index,index+1);
-			if( operator.equals(operatorFoundInExpression)) {
-				String found = expression.substring(index,index+1);
-				String returnExpression = operands[j]+found+operands[j+1];
-				String returnResult = solve(operands[j],operator, operands[j+1]);
-				String[] result = {returnExpression, returnResult};
-				return result;
-			};
-			index++;
-		}
-		return null;
-	}
-
-	private String solve(String a, String operator, String b) throws Exception {
-		BigDecimal aBD = new BigDecimal(a);
-		BigDecimal bBD = new BigDecimal(b);
-		if (PLUS.equals(operator)) {
-			return aBD.add(bBD).toString();
-		} else 	if (MINUS.equals(operator)) {
-			return aBD.subtract(bBD).toString();
-		} else 	if (MULTIPLY.equals(operator)) {
-			return aBD.multiply(bBD).toString();
-		} else 	if (DIVIDE.equals(operator)) {
-			BigDecimal result = aBD.divide(bBD,32, RoundingMode.HALF_UP);
-			return result.toString();
-		} else 
-			throw new Exception("Invalid expression provided");
+	public Expression create(Expression expression) {
+		expression = calculatorRepository.save(expression);
+		return expression;
 	}
 
 	@Override
 	public Expression update(Expression updated) throws Exception {
-		Expression domain = calculatorRepository.getOne(updated.getId());
-		domain.setLabel(updated.getLabel());
-		updated = calculatorRepository.save(domain);
+		updated = calculatorRepository.saveAndFlush(updated);
 		return updated;
 	}
 
+	@Override
+	public void delete(Expression eq) {
+		calculatorRepository.delete(eq);
+	}
+
+	@Override
+	public Expression findById(long id) throws Exception {
+		Optional<Expression> obj = calculatorRepository.findById(id);
+		if (obj.isPresent()) {
+			Expression eq = obj.get();
+			return eq;
+		}
+		return null;
+	}
+
+	@Override
+	public Expression findByLabel(String label) throws Exception {
+		return calculatorRepository.findExpressionByLabel(label);
+	}
+
+	@Override
+	public List<Expression> findAllHistoryOfEntered() {
+		return calculatorRepository.findAllByOrderByCreatedDesc();
+	}
+
+	@Override
+	public List<Expression> findAllLabelsOfEntered() {
+		return calculatorRepository.findLabelsOrderByCreatedDesc();
+	}
+
+	@Override
+	public Expression evaluate(Expression eq) throws Exception {
+		// An expression can be a constant expression or arithmetic expression
+		log.info("Expression: " + eq.getExpression() + "******");
+		String expression = eq.getExpression();
+		String value = evaluate(eq.getExpression());
+		eq.setResult(value);
+		log.info("Expression: " + eq.getExpression() + "=" + eq.getResult());
+		calculatorRepository.save(eq);
+		return eq;
+	}
+
+	String evaluate(String expression) throws Exception {
+		log.info("// ORIGINAL");
+		log.info("expression: " + expression);
+		expression = removeSpaces(expression);
+		expression = convertLabelsToResults(expression);
+		String answer = ExpressionParser.evaluate(expression);
+		return answer;
+	}
+
+	// FIND LABEL AND CONVERT WITH SERVICE
+	String removeSpaces(String expression) {
+		log.info("// REMOVE SPACES");
+		expression = expression.replaceAll(" ", "");
+		log.info("expression: " + expression);
+		return expression;
+	}
+
+	// FIND LABEL AND CONVERT WITH SERVICE
+	String convertLabelsToResults(String expression) {
+		log.info("// CONVERT LABELS");
+		String LABEL = "[a-zA-Z_]+";
+		Matcher m = Pattern.compile(LABEL).matcher(expression);
+		while (m.find()) {
+			String current = m.group().intern();
+			Expression eq = calculatorRepository.findExpressionByLabel(current);
+			expression = expression.replace(current, eq.getResult());
+			log.info("expression: " + expression);
+		}
+		return expression;
+	}
 
 }
