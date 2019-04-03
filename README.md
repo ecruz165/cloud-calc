@@ -49,7 +49,7 @@ AWS CodeStar user guide.
 
         $ mvn -f pom.xml compile
         $ mvn -f pom.xml package
-
+  
 5. Copy the built application to the Tomcat webapp directory.  The actual
    location of that directory will vary depending on your platform and
    installation.
