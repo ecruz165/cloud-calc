@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.sample.application.cloudcalc.domain.Expression;
 import com.sample.application.cloudcalc.model.ExpressionModel;
@@ -43,13 +45,14 @@ public class ApiRestController {
 	}
 	
 	@PostMapping(RestfulServicePaths.POST_EXPRESSION_CREATE)
-	ExpressionModel newEmployee(@RequestBody ExpressionModel expressionModel) {
-		Expression domain = convertToDomain(expressionModel);
+	ExpressionModel evaluateExpression(@RequestBody ExpressionModel expressionModel)  {
 		try {
+			Expression domain = convertToDomain(expressionModel);
 			domain = calculatorService.evaluate(domain);
 			expressionModel = convertToModel(domain);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (Exception  e) {
+	         throw new ResponseStatusException(
+	        		 HttpStatus.BAD_REQUEST, "Expression could not be solved:", e);
 		}
 		return expressionModel;
 	}
@@ -60,8 +63,9 @@ public class ApiRestController {
 		try {
 			domain = calculatorService.update(domain);
 			model = convertToModel(domain);
-		} catch (Exception e) {
-			e.printStackTrace();
+		}  catch (Exception  e) {
+	         throw new ResponseStatusException(
+	        		 HttpStatus.BAD_REQUEST, "Expression could not be labled:", e);
 		}
 		return model;
 	}

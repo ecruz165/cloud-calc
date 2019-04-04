@@ -2,6 +2,7 @@ package com.sample.application.cloudcalc.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 
@@ -14,34 +15,37 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.sample.application.cloudcalc.domain.Expression;
+import com.sample.application.cloudcalc.exceptions.ExpressionNotFoundException;
+import com.sample.application.cloudcalc.exceptions.InvalidExpressionException;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class CalculatorServiceImplTest {
 
 	@Autowired
-	private  CalculatorServiceImpl calculatorService;
+	private CalculatorServiceImpl calculatorService;
 
 	static Expression expression = null;
 	static Expression labeledExpression = null;
-	
+
 	@BeforeEach
-	public  void loadDatabase() {
-		expression =  new Expression("60*24*52");
+	public void loadDatabase() {
+		expression = new Expression("60*24*52");
 		expression.setResult("74880");
-		calculatorService.create(expression);		
-		
-		labeledExpression =  new Expression("60*24*52");
+		calculatorService.create(expression);
+
+		labeledExpression = new Expression("60*24*52");
 		labeledExpression.setResult("74880");
 		labeledExpression.setLabel("MINUTES_IN_YEAR");
 		calculatorService.create(labeledExpression);
 	}
+
 	@AfterEach
-	public  void unLoadDatabase() throws Exception {
+	public void unLoadDatabase() throws Exception {
 		Expression eq = calculatorService.findByLabel("MINUTES_IN_YEAR");
 		calculatorService.delete(eq);
 	}
-	
+
 	@Test
 	public void injectedComponentsAreNotNul5l() {
 		assertThat(calculatorService).isNotNull();
@@ -49,49 +53,65 @@ public class CalculatorServiceImplTest {
 
 	@Test
 	public void test_create_expression() {
-		Expression expression =  new Expression("60*24*52");
+		Expression expression = new Expression("60*24*52");
 		expression = calculatorService.create(expression);
 		assertThat(expression.getId()).isNotNull();
 	}
-	
+
 	@Test
 	public void test_update_expression() throws Exception {
 		expression.setLabel("SOME_LABEL");
 		Expression updateExpression = calculatorService.update(expression);
 		assertThat(updateExpression.getLabel()).isNotNull();
 	}
-	
+
 	@Test
 	public void test_delete_expression() throws Exception {
-		Expression expression =  new Expression("60*24*52");
+		Expression expression = new Expression("60*24*52");
 		expression = calculatorService.create(expression);
 		long id = expression.getId();
 		calculatorService.delete(expression);
-		assertThat(calculatorService.findById(id)).isNull();
 	}
-	
+
 	@Test
 	public void test_find_by_id() throws Exception {
 		assertThat(calculatorService.findById(labeledExpression.getId())).isNotNull();
 	}
-	
+
+	@Test
+	public void test_find_by_id_exception() throws Exception {
+		Expression expression = new Expression();
+		expression.setId(100L);
+		assertThrows(ExpressionNotFoundException.class, () -> {
+			calculatorService.findById(expression.getId());
+		});
+	}
+
 	@Test
 	public void test_find_all_history_of_entered() throws Exception {
 		assertThat(calculatorService.findAllHistoryOfEntered()).isNotEmpty();
-	}	
+	}
 
 	@Test
 	public void findAllLabelsOfEntered() throws Exception {
 		assertThat(calculatorService.findAllLabelsOfEntered()).isNotEmpty();
-	}	
-	
+	}
+
 	@Test
 	public void extraxtInnerExpressionsAndSolve() throws Exception {
 		String expression = "(3.15+5)*3.15";
 		expression = calculatorService.evaluate(expression);
 		assertThat(expression).isEqualTo("25.6725");
 	}
-
+	
+	@Test
+	public void test_add_exception() throws Exception {
+		Expression eq = new Expression("5L6");
+		assertThrows(InvalidExpressionException.class, () -> {
+			calculatorService.evaluate(eq);
+		});
+	}
+	
 	@Test
 	public void test_add() throws Exception {
 		Expression eq = new Expression("5+6");
@@ -168,21 +188,20 @@ public class CalculatorServiceImplTest {
 		eq = calculatorService.evaluate(eq);
 		assertEquals(new BigDecimal(2).toString(), eq.getResult());
 	}
-	
+
 	@Test
 	public void test_complex_nested_paranthesis() throws Exception {
 		Expression eq = new Expression("(5+5)*8+(5/5)");
 		eq = calculatorService.evaluate(eq);
 		assertEquals(new BigDecimal(81).toString(), eq.getResult());
 	}
-	
+
 	@Test
 	public void test_complex_nested_brackets() throws Exception {
-		Expression eq = new Expression("[5+5]*8+{5/5}") ;
+		Expression eq = new Expression("[5+5]*8+{5/5}");
 		eq = calculatorService.evaluate(eq);
 		assertEquals(new BigDecimal(81).toString(), eq.getResult());
 	}
-
 
 	@Test
 	public void complex_using_label() throws Exception {
@@ -193,7 +212,7 @@ public class CalculatorServiceImplTest {
 	}
 
 	@Test
-	public void complex_using_label_enclosed_in_param() throws Exception {		
+	public void complex_using_label_enclosed_in_param() throws Exception {
 		Expression eq = new Expression("(MINUTES_IN_YEAR+5)-MINUTES_IN_YEAR");
 		eq = calculatorService.evaluate(eq);
 		assertEquals(new BigDecimal(5).toString(), eq.getResult());

@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.sample.application.cloudcalc.domain.Expression;
 
 @ExtendWith(SpringExtension.class)
-class ExpressionParserTest {
+class ExpressionParserUnitTest {
 
 	@Test
 	void test() throws Exception{

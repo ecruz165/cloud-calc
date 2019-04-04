@@ -31,7 +31,7 @@ import com.sample.application.cloudcalc.service.CalculatorService;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(ApiRestController.class)
-class ApiRestControllerTest {
+class ApiRestControllerUnitTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -139,8 +139,6 @@ class ApiRestControllerTest {
 	
 	private synchronized static LocalDateTime parse(String datetime) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm a");
-		if (datetime ==null)
-			return null;
 		LocalDateTime date = LocalDateTime.parse(datetime, formatter);
         return date;
 	}

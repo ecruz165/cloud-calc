@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sample.application.cloudcalc.domain.Expression;
+import com.sample.application.cloudcalc.exceptions.ExpressionNotFoundException;
+import com.sample.application.cloudcalc.exceptions.InvalidExpressionException;
 import com.sample.application.cloudcalc.repositories.CalculatorRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,12 +34,14 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 	@Override
 	public Expression update(Expression updated) throws Exception {
+		Expression existing = findById(updated.getId());
 		updated = calculatorRepository.saveAndFlush(updated);
 		return updated;
 	}
 
 	@Override
-	public void delete(Expression eq) {
+	public void delete(Expression eq) throws Exception {
+		Expression existing = findById(eq.getId());
 		calculatorRepository.delete(eq);
 	}
 
@@ -48,7 +52,7 @@ public class CalculatorServiceImpl implements CalculatorService {
 			Expression eq = obj.get();
 			return eq;
 		}
-		return null;
+		throw new ExpressionNotFoundException("Expression is not found.");
 	}
 
 	@Override
@@ -68,13 +72,18 @@ public class CalculatorServiceImpl implements CalculatorService {
 
 	@Override
 	public Expression evaluate(Expression eq) throws Exception {
-		// An expression can be a constant expression or arithmetic expression
-		log.info("Expression: " + eq.getExpression() + "******");
-		String expression = eq.getExpression();
-		String value = evaluate(eq.getExpression());
-		eq.setResult(value);
-		log.info("Expression: " + eq.getExpression() + "=" + eq.getResult());
-		calculatorRepository.save(eq);
+		try {
+			// An expression can be a constant expression or arithmetic expression
+			log.info("Expression: " + eq.getExpression() + "******");
+			String expression = eq.getExpression();
+			String value;
+			value = evaluate(eq.getExpression());
+			eq.setResult(value);
+			log.info("Expression: " + eq.getExpression() + "=" + eq.getResult());
+			calculatorRepository.save(eq);
+		} catch (Exception e) {
+			throw new InvalidExpressionException("Could not process expression: " + eq.toString() );
+		}
 		return eq;
 	}
 
