@@ -470,8 +470,16 @@ function isValidNumberInput(current, input){
 
 function isValidInput(current, input){
 	if (isNaN(input) ){
-		if (current.length==0 ){
-			if (isOperator(input) && (input!='-')){
+		if (input=='-'){
+			if (current.length>=2 && isOperator(current.substring(current.length-1,current.length))){
+				if (isOperator(current.substring(current.length-2,current.length-1))){
+					return false;
+				}
+			} else if (current.length==1 && isOperator(current.substring(current.length-1,current.length))){
+					return false;
+			}
+		} else if (current.length==0 ){
+			if (isOperator(input)){
 				return false;
 			}
 		} else  {
