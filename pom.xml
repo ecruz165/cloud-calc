@@ -5,7 +5,7 @@
 
 	<groupId>com.sample.application</groupId>
 	<artifactId>cloud-calc</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 	<packaging>war</packaging>
 
 	<name>Sample Application CloudCac</name>
@@ -30,6 +30,9 @@
 		<maven-war-plugin.version>3.2.2</maven-war-plugin.version>
 		<main.basedir>${basedir}/../..</main.basedir>
 		<m2eclipse.wtp.contextRoot>/</m2eclipse.wtp.contextRoot>
+		<clover-maven-plugin.version>4.3.1</clover-maven-plugin.version>
+		<junit-platform-runner.version>1.5.0-M1</junit-platform-runner.version>
+		<junit-insights.version>1.1.0</junit-insights.version>
 	</properties>
 
 	<dependencies>
@@ -79,14 +82,12 @@
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
-<!-- https://mvnrepository.com/artifact/org.junit.platform/junit-platform-runner -->
-<dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-runner</artifactId>
-    <version>1.5.0-M1</version>
-    <scope>test</scope>
-</dependency>
-
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-runner</artifactId>
+			<version>${junit-platform-runner.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
@@ -122,7 +123,6 @@
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
-
 		<!-- https://mvnrepository.com/artifact/com.vladmihalcea/hibernate-types-52 -->
 		<dependency>
 			<groupId>com.vladmihalcea</groupId>
@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>de.adesso</groupId>
 			<artifactId>junit-insights</artifactId>
-			<version>1.0.0</version>
+			<version>${junit-insights.version}</version>
 		</dependency>
 
 	</dependencies>
@@ -159,6 +159,7 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
 		<finalName>ROOT</finalName>
 
 		<plugins>
@@ -179,8 +180,7 @@
 			<plugin>
 				<groupId>org.openclover</groupId>
 				<artifactId>clover-maven-plugin</artifactId>
-				<!-- Version 4.3.0 does not work due to bug since sept 2018 -->
-				<version>4.2.1</version>
+				<version>${clover-maven-plugin.version}</version>
 				<configuration>
 					<targetPercentage>0%</targetPercentage>
 				</configuration>
@@ -194,9 +194,10 @@
 					</execution>
 				</executions>
 			</plugin>
-
 		</plugins>
+
 	</build>
+
 	<repositories>
 		<repository>
 			<id>bintray.com</id>
